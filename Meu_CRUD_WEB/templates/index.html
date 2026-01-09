@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <title>Lista de Utilizadores</title>
+</head>
+<body>
+    <h1><p align="center">
+  🐍 <strong>IEFP Python Project</strong>
+</h1></p>
+    <h1><p align="center">
+   <strong>Lista de Utilizadores</strong>
+</h1></p>
+
+  <p align="center"><a href="/novo">+ Novo utilizador</a></p>
+
+  <table border="1" cellpadding="6" align="center">
+    <tr>
+      <th>ID</th><th>Nome</th><th>Email</th><th>Criado em</th><th>Ações</th>
+    </tr>
+
+    {% for u in utilizadores %}
+    <tr>
+      <td>{{ u.id }}</td>
+      <td>{{ u.nome }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.created_at }}</td>
+      <td>
+        <a href="/editar/{{ u.id }}">Editar</a>
+
+        <form action="/apagar/{{ u.id }}" method="post" style="display:inline;">
+          <button type="submit">Apagar</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <div>
+</body>
+</html>

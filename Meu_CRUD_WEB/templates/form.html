@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <title>{{ titulo }}</title>
+</head>
+<body>
+  <h1>{{ titulo }}</h1>
+
+  <form method="post">
+    <p>
+      Nome:<br>
+      <input type="text" name="nome" required value="{{ utilizador.nome if utilizador else '' }}">
+    </p>
+
+    <p>
+      Email:<br>
+      <input type="email" name="email" required value="{{ utilizador.email if utilizador else '' }}">
+    </p>
+
+    <button type="submit">Guardar</button>
+    <a href="/">Cancelar</a>
+  </form>
+
+</body>
+</html>
