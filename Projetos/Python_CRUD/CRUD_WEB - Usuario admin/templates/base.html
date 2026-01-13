@@ -1,9 +1,35 @@
-Python Programador 01-25
-{% with mensagens = get_flashed_messages() %} {% if mensagens %}
-{% for m in mensagens %}
-{{ m }}
-{% endfor %}
-{% endif %} {% endwith %}
-Página Principal | Utilizadores | Meteorologia | Cotação de moedas | {% if session.username %} Logado como: {{ session.username }} | Logout {% endif %}
-
-{% block content %}{% endblock %}
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <title  >Python Programador 01-25</title>
+</head>
+<body>
+  <h1 align="center">Python Programador 01-25</h1>
+ 
+  {% with mensagens = get_flashed_messages() %}
+    {% if mensagens %}
+      <ul>
+        {% for m in mensagens %}
+          <li>{{ m }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+ 
+  <p align="center">
+  <a href="{{ url_for('index') }}">Página Principal</a> |
+  {#<a href="{{ url_for('utilizadores') }}">Utilizadores</a>#}
+  <a href="{{ url_for('meteorologia') }}">Meteorologia </a> |
+  <a href="{{ url_for('exibir_cotacoes')}}">Conversor De Moedas</a> |
+  
+  {% if session.username %}
+  <a href="{{ url_for('logout') }}">Logout</a><p align="center">Logado como: {{ session.username }} </p>
+  {% endif %}
+  </p>
+ 
+  <hr>
+  {% block content %}{% endblock %}
+</body>
+</html>
+ 

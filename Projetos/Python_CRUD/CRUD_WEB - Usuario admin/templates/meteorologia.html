@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Consulta de Tempo</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        #resultado { margin-top: 20px; border-left: 4px solid #3498db; padding-left: 15px; }
-    </style>
-</head>
-<body>
-   
-    <form method="POST">
+{% extends "base.html" %}
+{% block content %}
+<html>
+<form method="POST">
     <h2>Consultar Clima</h2>
     <input type="text" name="cidade" placeholder="Digite a cidade" required>
     <button type="submit">Consultar</button>
@@ -23,5 +14,5 @@
                     <p><strong>Condição:</strong> {{ dados.weather[0].description }}</p>
                 </div>
     {% endif %}
-</body>
 </html>
+{% endblock %}

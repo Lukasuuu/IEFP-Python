@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+   {% if cotacoes %}
+   <form method="POST">
+    <h2>💰 Valores Atuais</h2>
+    <input type="text" name="cotacao" placeholder="Digite a cidade" required>
+    <button type="submit">Consultar</button>
+    </form>
+        <div>
+            <h2>💰 Valores Atuais</h2>
+            <p><strong>Dólar:</strong> R$ {{ cotacoes['USDBRL']['bid'] }}</p>
+            <p><strong>Euro:</strong> R$ {{ cotacoes['EURBRL']['bid'] }}</p>
+            <p><strong>Bitcoin:</strong> R$ {{ cotacoes['BTCBRL']['bid'] }}</p>
+        </div>
+    {% endif %}
+{%endblock%}

@@ -32,7 +32,7 @@ def index():
     
     cursor.close()
     cnx.close()
-##render_template envia os dados todos para o ficheiro HTML        
+    ##render_template envia os dados todos para o ficheiro HTML        
     return render_template("index.html",utilizadores=utilizadores)
 
 @app.route("/novo", methods=["GET","POST"])
@@ -182,6 +182,21 @@ def  meteorologia():
         requisicao = requests.get(link)
       
         dados = requisicao.json()
+        
     return render_template("meteorologia.html", dados=dados)
+
+@app.route("/moedas", methods=["GET","POST"])
+
+def exibir_cotacoes():
+      #Protege para fazer login da sessao pra acessar a pagina
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
+    # Buscando os dados reais da API de cotações
+    requisicao = requests.get('https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL')
+    
+    cotacoes = requisicao.json()
+
+    return render_template("cotacoes.html", cotacoes=cotacoes)
 
 app.run(debug=True)
