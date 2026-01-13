@@ -1,4 +1,5 @@
-from pickletools import string1
+from pickletools import string1Lucas
+
 
 
 nome=input("Digite seu nome: ") #pega o nome digitado pelo usuario
