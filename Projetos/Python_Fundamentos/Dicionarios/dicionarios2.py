@@ -71,7 +71,7 @@ if nome in dados:
     for chave, valor in dados[nome].items():     # itera sobre pares (nome, informacoes) no dicionário 'dados'
         chave = dados[nome].get('idade', 'N/A')  # obtém 'idade' com valor padrão 'N/A' se não existir
         valor = dados[nome].get('cidade', 'N/A') # obtém 'cidade' com valor padrão 'N/A' se não existir
-        if idade and cidade and nome is not None:  # verifica se existem valores válidos antes de imprimir
+        if idade and cidade and nome is not None:  # pyright: ignore[reportPossiblyUnboundVariable] # verifica se existem valores válidos antes de imprimir
             print(f"{nome}: idade = {chave}, cidade = {valor}")
             break
 print('')

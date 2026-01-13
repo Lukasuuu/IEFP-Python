@@ -37,7 +37,7 @@ while True:
         print ('o valor nao é valido pois usou uma string')
 
 try:
-    valorPagar= preco - preco * (desconto/100)
+    valorPagar= preco - preco * (desconto/10)
     print(f'Valor a pagar é: {valorPagar}')
 except NameError:
     print('O PROGRAMA NÃO CONSEGUE CALCULAR POR FALTA DE INFORMACAO')

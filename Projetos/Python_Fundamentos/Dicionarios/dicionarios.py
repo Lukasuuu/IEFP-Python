@@ -18,12 +18,33 @@ print(aluno.get('idade'))     #mostra o valor alterado da chave idade
 print(aluno)                  #mostra o dicionario completo
 print(' ')
 
-if aluno['notas'] <= 10:    #verifica se a nota e menor ou igual a 10
-    print('A nota e valida')
+if aluno.get('inscrito'):    #verifica se o aluno esta inscrito
+    print('O aluno está inscrito')   #mostra que o aluno esta inscrito
 else:
-    print('A nota nao e valida')
+    print('O aluno não está inscrito') #mostra que o aluno nao esta inscrito
 print(' ')
 
+if aluno.get('nota'):       #verifica se o aluno tem nota
+    print('O aluno tem nota')      #mostra que o aluno tem nota
+else:
+    print('O aluno não tem nota')   #mostra que o aluno nao tem nota
+print(' ')
+
+if 'notas' in aluno:        #verifica se a chave notas esta no dicionario
+    print('A chave notas existe no dicionario') #mostra que a chave notas existe
+else:
+    print('A chave notas não existe no dicionario') #mostra que a chave notas nao existe
+print(' ')
+
+#Calcular a media das notas
+media = sum(aluno['notas']) / len(aluno['notas'])  #calcula a media das notas
+print(f'A media do aluno é: {media}')  #mostra a media do aluno
+print(' ')
+
+if media >= 9:                      #se a media for maior ou igual a 9
+    print('Aluno aprovado')         #mostra que o aluno esta aprovado
+else:
+    print('Aluno reprovado')        #mostra que o aluno esta reprovado
 
 #remover itens do dicionario   
 del aluno['inscrito']        #remove a chave inscrito

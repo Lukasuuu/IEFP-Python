@@ -12,15 +12,18 @@ def ciclos():
         count += 1
 ciclos()
 
-print(' ')
+#Print das letras do nome Lucas
 
 for letras in 'Lucas':
     print(letras)
+    
+#lista de nomes
     
 nomes = ['Lucas', 'Mariana', 'Carlos', 'Beatriz' , 'Fernanda' , 'Gabriel']
 
 print(' ')
 
+#Ciclo com a lista de nomes
 for i in nomes:
    
     print(i)
@@ -28,9 +31,10 @@ for i in nomes:
     
 print(' ')
 
-
+#Ciclo com a lista de nuemros
 numeros = [10,20,30,40,50]
 
 for num in numeros:
     print(num)
 print(' ')
+

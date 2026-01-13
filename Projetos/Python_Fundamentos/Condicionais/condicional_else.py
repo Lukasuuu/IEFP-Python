@@ -2,17 +2,16 @@
 
 #desafio 1
 
-'''
 idade = input("Digite sua idade: ")  #pega a idade digitada pelo usuario
 
-if int(idade) < 18:
+if int(idade) < 18: 
     print("Voce é menor de idade e ainda não tem idade pra tirar a carta.")
     print("Espere mais algum tempo.")
 
 else:
     print("Voce é maior de idade." \
     " Pode tirar a carta de motorista.")
-'''
+
 
 #desafio 2
 
@@ -27,38 +26,37 @@ Se a nota for superior ou igual a 90, mostrar "Excelente"
 
 nota = int(input("Digite sua nota: "))  #pega a nota digitada pelo usuario
 
-if nota < 50:
+if nota < 50:                       #se a nota for menor que 50
     print("Insuficiente")
-elif nota >= 50 and nota < 70:
+elif nota >= 50 and nota < 70:      #se a nota for maior ou igual a 50 e menor que 70
     print("Suficiente")
-elif nota >= 70 and nota < 90:
-    print("Bom")
-else:
+elif nota >= 70 and nota < 90:      #se a nota for maior ou igual a 70 e menor que 90
+    print("Bom")                          
+else:                               #se a nota for maior ou igual a 90
     print("Excelente")
 
 ############ Operadores logicos: (and, or, not) ###############
-
 #desafio 3
 
-domingo_faz_sol = True      #variavel que indica se o domingo faz sol
+domingo_faz_sol = True         #variavel que indica se o domingo faz sol
 tenho_boleia = False           #variavel que indica se tenho bola
 
 #and
 if domingo_faz_sol and tenho_boleia: #se faz sol e tenho boleia
-    print("Vou à praia")
+    print("Vou à praia")             #mostra vou à praia
 else:
-    print("Fico em casa")
+    print("Fico em casa")            #mostra fico em casa
 
 #or
 if domingo_faz_sol or tenho_boleia: #se faz sol ou tenho boleia
-    print("Vou à praia")
+    print("Vou à praia")             #mostra vou à praia
 else:
-    print("Fico em casa")
+    print("Fico em casa")            #mostra fico em casa
 #not
-if domingo_faz_sol or not tenho_boleia: #se nao tenho boleia
-    print("vou à praia")
+if domingo_faz_sol or not tenho_boleia:  #se nao tenho boleia
+    print("vou à praia")                 #mostra vou à praia
 else:
-    print("Fico em casa")
+    print("Fico em casa")                #mostra fico em casa
 
 ########## Operadores de comparacao: (==, !=, >, <, >=, <=) ###############
 
@@ -70,8 +68,8 @@ Se a password for valida, mostrar "Password valida"
 Se a password for invalida, mostrar "Password invalida"
 '''
 
-password = input("Digite sua password: ")  #pega a password digitada pelo usuario
-if len(password) >= 6 and len(password) <= 15:
-    print("Password valida")
+password = input("Digite sua password: ")       #pega a password digitada pelo usuario
+if len(password) >= 6 and len(password) <= 15:  #se a senha tiver entre 6 e 15 caracteres
+    print("Password valida")                    #se a senha tiver entre 6 e 15 caracteres mostra senha valida
 else:
-    print("Password invalida")
+    print("Password invalida")                  #se a senha nao tiver entre 6 e 15 caracteres mostra senha invalida
