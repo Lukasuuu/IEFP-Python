@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de Tempo</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #resultado { margin-top: 20px; border-left: 4px solid #3498db; padding-left: 15px; }
+    </style>
+</head>
+<body>
+   
+    <form method="POST">
+    <h2>Consultar Clima</h2>
+    <input type="text" name="cidade" placeholder="Digite a cidade" required>
+    <button type="submit">Consultar</button>
+    </form>
+    {% if dados %}
+                <div>
+                    <h2>🌤️ Tempo em {{ dados.name }}</h2>
+                    <p><strong>Temperatura:</strong> {{ dados.main.temp }}°C</p>
+                    <p><strong>Humidade:</strong> {{ dados.main.humidity }}%</p>
+                    <p><strong>Condição:</strong> {{ dados.weather[0].description }}</p>
+                </div>
+    {% endif %}
+</body>
+</html>

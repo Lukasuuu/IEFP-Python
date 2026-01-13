@@ -1,6 +1,8 @@
 from flask import Flask
 import mysql.connector
 from flask import render_template, request, redirect, url_for,session,flash
+import json
+import requests
 
 #Fazer a ligação com a Base de dados
 def ligar_bd():
@@ -160,7 +162,26 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-app.run(debug=True)
 
-
+@app.route("/meteorologia", methods=["GET","POST"])
+def  meteorologia(): 
     
+    #Protege para fazer login da sessao pra acessar a pagina
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
+    dados = None
+    
+    if request.method == "POST":
+        key = "3689129ee7af0fa500cad990971aecd6"
+        cidade = request.form.get("cidade")
+        
+        # Adicionei &units=metric para a temperatura vir em Celsius
+        link = f"http://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={key}&lang=pt_br&units=metric"
+        
+        requisicao = requests.get(link)
+      
+        dados = requisicao.json()
+    return render_template("meteorologia.html", dados=dados)
+
+app.run(debug=True)

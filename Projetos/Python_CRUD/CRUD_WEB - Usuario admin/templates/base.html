@@ -1,0 +1,9 @@
+Python Programador 01-25
+{% with mensagens = get_flashed_messages() %} {% if mensagens %}
+{% for m in mensagens %}
+{{ m }}
+{% endfor %}
+{% endif %} {% endwith %}
+Página Principal | Utilizadores | Meteorologia | Cotação de moedas | {% if session.username %} Logado como: {{ session.username }} | Logout {% endif %}
+
+{% block content %}{% endblock %}
