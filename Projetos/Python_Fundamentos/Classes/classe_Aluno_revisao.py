@@ -1,4 +1,4 @@
-from aluno import Aluno
+from Python_Fundamentos.classe_Aluno import Aluno
 
 turma = []
 
