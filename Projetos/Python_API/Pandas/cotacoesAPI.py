@@ -22,4 +22,3 @@ print(f'Cotacao do Euro agora: {cotacao_euro}')
 print('')
 print(f'Cotacao do Dolar agora: {cotacao_dolar}')
 print('')
-
