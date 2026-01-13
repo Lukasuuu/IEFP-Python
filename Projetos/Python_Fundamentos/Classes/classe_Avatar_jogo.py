@@ -1,4 +1,4 @@
-from Python_Fundamentos.classe_Avatar import Avatar
+from Python_Fundamentos.Classes.classe_Avatar import Avatar
 
 
 #nome = 'Joana'
