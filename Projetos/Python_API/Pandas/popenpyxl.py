@@ -9,9 +9,9 @@ from openpyxl import workbook, load_workbook
 # SE utilizar so o import do workboook, so vou conseguir criar o ficheiro , mas se quiser
 # utilizar esse tengo o metodo load workbook
 '''
-tabela = load_workbook('Produtos.xlsx')
 
-aba_ativa = tabela.active
+
+
 
 '''
 #Quando abrimos o excel é a aba que esta aberta para nós
@@ -27,16 +27,19 @@ for celula in aba_ativa['C']:
         
 tabela.save('ProdutoTeste.xlsx')
 '''
+tabela = load_workbook('Produtos.xlsx')
 
-for celula in aba_ativa['A']:
+aba_ativa = tabela.active
+
+for celula in aba_ativa['A']:                   # type: ignore
     if celula.value == 'SPA':
-        for celula in aba_ativa['C']:
+        for celula in aba_ativa['C']:           # pyright: ignore[reportOptionalSubscript]
             if celula.value == 'Serviço':
                 linha = celula.row
-                aba_ativa[f'D{linha}']=2.5
+                aba_ativa[f'D{linha}']=2.5      # type: ignore
     
         
-tabela.save('ProdutoTeste1.xlsx')
+tabela.save('Produtos.xlsx')
 print('tabela criada e altera com sucesso!!!')
 
 
