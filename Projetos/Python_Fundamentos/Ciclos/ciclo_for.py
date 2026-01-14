@@ -22,7 +22,7 @@ for i in range(5):
 print(' ')
 
 for i in range (1,5):
-    print(num)
+    print(numeros)
 print(' ')
 
 for num in range (2,10,2):
@@ -30,7 +30,8 @@ for num in range (2,10,2):
 print(' ')
 
 '''
-Dada uma lista de numeros, pesquise e mocstre qual deles e o maior
+desafio:
+Dada uma lista de numeros, pesquise e mostre qual deles e o maior
 
 numeros = [5,3,7,19,1,3,4,12,6,7]
 
@@ -46,3 +47,30 @@ print(f'o maior é: {maior}')
 
 maior = max(numeros)            #Outra forma de fazer o maior
 print(f'O maior é: {maior}')
+
+#ciclo for com else
+for n in range(5):
+    print(n)
+else:
+    print('Fim do ciclo for')
+print(' ')
+
+#ciclo for com break
+for n in range(5):
+    if n == 3:
+        break
+    print(n)
+    
+#ciclo for com continue
+for n in range(5):
+    if n == 3:
+        continue
+    print(n)
+print('Fim do ciclo for')
+print(' ')
+
+#ciclo for matriz
+for i in range(3):
+    for j in range(2):
+        print(f'i={i} j={j}')
+print('Fim do ciclo for')
