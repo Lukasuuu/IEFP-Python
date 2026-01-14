@@ -22,8 +22,8 @@ print(frase[-2])
 nome = "Filipa"
 apelido = 'Silva'
 idade = 17
-# A Filipa Silva tem 17 anos
 
+# A Filipa Silva tem 17 anos
 frase = 'A ' + nome + ' ' + apelido + ' tem ' + str(idade) + ' anos.'
 print(frase)
 
