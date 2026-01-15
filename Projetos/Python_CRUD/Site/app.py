@@ -19,8 +19,7 @@ app.secret_key="123"
 
 @app.route("/")
 
-def index():
-    
+def index():  
     if "user_id" not in session:
         return redirect(url_for("login"))
     
@@ -34,5 +33,4 @@ def index():
     cnx.close()
     ##render_template envia os dados todos para o ficheiro HTML        
     return render_template("index.html",users=users)
-
 app.run(debug=True)
