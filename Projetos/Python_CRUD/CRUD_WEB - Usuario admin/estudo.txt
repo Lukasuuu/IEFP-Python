@@ -1,0 +1,49 @@
+🧩 Explicação completa do teu app.py
+
+🔌 Função ligar_bd()
+Cria e devolve uma ligação MySQL.
+É usada em todas as rotas que precisam de aceder à base de dados.
+
+🏠 Rota / — Função index()
+Verifica se o utilizador está autenticado.
+Vai buscar todos os utilizadores da tabela utilizadores.
+Envia os dados para index.html.
+
+➕ Rota /novo — Função novo()
+Apenas acessível se o utilizador estiver autenticado.
+GET → mostra o formulário para criar um novo utilizador.
+POST → insere um novo utilizador na BD e redireciona para /.
+
+✏️ Rota /editar/<id> — Função editar(id)
+GET → busca os dados do utilizador pelo ID e mostra o formulário preenchido.
+POST → atualiza nome e email do utilizador.
+
+❌ Rota /apagar/<id> — Função apagar(id)
+Apaga o utilizador com o ID indicado.
+Depois redireciona para /.
+
+⚠️ Nota importante:  
+Estás a apagar utilizadores via GET, o que não é recomendado.
+Idealmente deveria ser POST.
+
+🔐 Rota /login — Função login()
+GET → mostra o formulário de login.
+POST → valida username e password.
+Se correto:
+Guarda user_id, username e user_role na sessão.
+Se incorreto:
+Mostra mensagem de erro.
+
+🚪 Rota /logout — Função logout()
+Limpa a sessão.
+Redireciona para o login.
+
+🌦️ Rota /meteorologia
+Apenas acessível se autenticado.
+GET → mostra o formulário.
+POST → chama a API OpenWeather e devolve os dados para o template.
+
+💱 Rota /moedas — Função exibir_cotacoes()
+Apenas acessível se autenticado.
+Vai buscar cotações reais da API AwesomeAPI.
+Envia para o template.
