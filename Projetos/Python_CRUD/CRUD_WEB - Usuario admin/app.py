@@ -35,8 +35,41 @@ def index():
     ##render_template envia os dados todos para o ficheiro HTML        
     return render_template("index.html",utilizadores=utilizadores)
 
-@app.route("/novo", methods=["GET","POST"])
+@app.route("/roles", methods=["GET", "POST"])
+def gerir_roles():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
 
+    # Apenas administradores podem aceder
+    if session.get("user_role") != "admin":
+        flash("Acesso negado. Apenas administradores podem gerir permissões.")
+        return redirect(url_for("index"))
+
+    cnx = ligar_bd()
+    cursor = cnx.cursor(dictionary=True)
+
+    # Atualizar role
+    if request.method == "POST":
+        user_id = request.form["user_id"]
+        novo_role = request.form["role"]
+
+        cursor.execute(
+            "UPDATE login SET role=%s WHERE id=%s",
+            (novo_role, user_id)
+        )
+        cnx.commit()
+        flash("Role atualizado com sucesso!")
+
+    # Buscar utilizadores
+    cursor.execute("SELECT id, username, role FROM login ORDER BY id")
+    utilizadores = cursor.fetchall()
+
+    cursor.close()
+    cnx.close()
+
+    return render_template("roles.html", utilizadores=utilizadores)
+
+@app.route("/novo", methods=["GET","POST"])
 def novo():
     if "user_id" not in session:
         return redirect(url_for("login"))
@@ -136,7 +169,7 @@ def login():
         #Procurar o utilizador na tabela login:
         
         cur.execute(
-            "SELECT id, username, password FROM login WHERE username = %s",(username,)
+            "SELECT id, username, password,role FROM login WHERE username = %s",(username,)
         )
         
         user = cur.fetchone()
@@ -149,6 +182,7 @@ def login():
         if user and user["password"] == password:
             session["user_id"] = user["id"]
             session["username"] = user["username"]
+            session["user_role"] = user["role"]
             return redirect(url_for("index"))
         else:
             flash("Username ou password incorretos.")
