@@ -232,7 +232,7 @@ def meteorologia():
 
     return render_template("meteorologia.html", dados=dados)
 
-@app.route("/moedas", methods=["GET",["POST"]])
+@app.route("/moedas", methods=["GET","POST"])
 def moedas():
 
     if "user_id" not in session:

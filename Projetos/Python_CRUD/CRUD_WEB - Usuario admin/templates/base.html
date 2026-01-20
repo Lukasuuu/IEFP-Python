@@ -2,11 +2,11 @@
 <html lang="pt">
 <head>
   <meta charset="utf-8">
-  <title  >Python Programador 01-25</title>
+  <title>Python Programador 01-25</title>
 </head>
 <body>
   <h1 align="center">Python Programador 01-25</h1>
- 
+
   {% with mensagens = get_flashed_messages() %}
     {% if mensagens %}
       <ul>
@@ -16,23 +16,25 @@
       </ul>
     {% endif %}
   {% endwith %}
- 
+
   <p align="center">
-  {% if session.get('user_role') == 'admin' %}
-    <a href="{{ url_for('roles') }}">Gerir Permissões (Roles)</a> |
-  {% endif %}
-  <a href="{{ url_for('login') }}">Login</a> |
-  <a href="{{ url_for('index') }}">Página Principal</a> |
-  <a href="{{ url_for('meteorologia') }}">Meteorologia </a> |
-  <a href="{{ url_for('moedas')}}">Conversor De Moedas</a> |
-  
-  {% if session.username %}
-  <a href="{{ url_for('logout') }}">Logout</a><p align="center">Logado como: {{ session.username }} </p>
-  {% endif %}
+    {% if session.get('user_role') == 'admin' %}
+      <a href="{{ url_for('roles') }}">Gerir Permissões (Roles)</a> |
+    {% endif %}
+
+    <a href="{{ url_for('login') }}">Login</a> |
+    <a href="{{ url_for('index') }}">Página Principal</a> |
+    <a href="{{ url_for('meteorologia') }}">Meteorologia</a> |
+    <a href="{{ url_for('moedas') }}">Conversor De Moedas</a> |
+
+    {% if session.username %}
+      <a href="{{ url_for('logout') }}">Logout</a>
+      <p align="center">Logado como: {{ session.username }}</p>
+    {% endif %}
   </p>
- 
+
   <hr>
+
   {% block content %}{% endblock %}
 </body>
 </html>
- 
