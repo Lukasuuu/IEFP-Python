@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Cotações</h2>
-<p>Dólar: R$ {{ cotacoes.USDBRL.bid }}</p>
-<p>Euro: R$ {{ cotacoes.EURBRL.bid }}</p>
-<p>Bitcoin: R$ {{ cotacoes.BTCBRL.bid }}</p>
+<h1>Cotações</h1>
+<p>Dólar: R$ {{ cotacoes.get('USDBRL', {}).get('bid', 'N/A') }}</p> 
+<p>Euro: R$ {{ cotacoes.get('EURBRL', {}).get('bid', 'N/A') }}</p> 
+<p>Bitcoin: R$ {{ cotacoes.get('BTCBRL', {}).get('bid', 'N/A') }}</p>  
+<h3>Conversões</h3> 
+<p>1 Real em Dólar: US$ {{ (1 / cotacoes.get('USDBRL', {}).get('bid', 1)) | round(4) }}</p>
+<p>1 Real em Euro: € {{ (1 / cotacoes.get('EURBRL', {}).get('bid', 1)) | round(4) }}</p>
 {% endblock %}

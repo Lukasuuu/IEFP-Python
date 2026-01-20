@@ -55,7 +55,7 @@ def roles():
         novo_role = request.form["role"]
 
         cursor.execute(
-            "UPDATE login SET role=%s WHERE id=%s",
+            "UPDATE login SET role=%s WHERE id=%s and created_at",
             (novo_role, user_id)
         )
         cnx.commit()
@@ -63,7 +63,7 @@ def roles():
 
     # Buscar utilizadores
     cursor.execute(
-        "SELECT id, username, role FROM login ORDER BY id"
+        "SELECT id, username, role, created_at FROM login ORDER BY id"
         )
     
     utilizadores = cursor.fetchall() #
@@ -190,9 +190,9 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/register", methods=["GET","POST"])
+@app.route("/register", methods=["GET","POST"]) 
 def register():
-
+    
     if request.method == "POST":
 
         username=request.form["username"]
@@ -202,7 +202,7 @@ def register():
         cursor = cnx.cursor()
 
         cursor.execute(
-                        "INSERT INTO login(username,password,role) VALUES(%s,%s,%s)",(username, password, "user")
+                         "INSERT INTO login(username,password,role) VALUES(%s,%s,%s)",(username, password, "utilizador")
                         )
         cnx.commit()
         cursor.close()
@@ -212,6 +212,27 @@ def register():
         return redirect(url_for("login"))
     
     return render_template("register.html")
+
+@app.route("/delete_user/<int:id>", methods=["POST"])
+def delete_user(id):
+    cnx = ligar_bd()
+    cursor = cnx.cursor()
+
+    # Verifica o papel do usuário antes de deletar
+    cursor.execute("SELECT role FROM login WHERE id=%s", (id,))
+    role = cursor.fetchone()
+
+    if role and role[0] != "admin":
+        cursor.execute("DELETE FROM login WHERE id=%s", (id,))
+        cnx.commit()
+        flash("Usuário deletado com sucesso.")
+    else:
+        flash("Não é permitido deletar administradores.")
+
+    cursor.close()
+    cnx.close()
+
+    return redirect(url_for("roles"))
 
 @app.route("/meteorologia", methods=["GET","POST"])
 def meteorologia():
@@ -229,6 +250,7 @@ def meteorologia():
         link = f"http://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={key}&lang=pt_br&units=metric"
         
         dados = requests.get(link).json()
+        print(dados)
 
     return render_template("meteorologia.html", dados=dados)
 
@@ -237,8 +259,12 @@ def moedas():
 
     if "user_id" not in session:
         return redirect(url_for("login"))
-    
+
     cotacoes = requests.get("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL").json()
+    
+    for k, v in cotacoes.items(): 
+        try: v["bid"] = float(v["bid"]) 
+        except (KeyError, ValueError, TypeError): v["bid"] = None
     
     return render_template("cotacoes.html", cotacoes=cotacoes)
 

@@ -1,22 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Gerir Roles</h2>
+<h2>Gerir Permissões</h2>
 <table border="1">
-  <tr><th>ID</th><th>Username</th><th>Role</th><th>Ação</th></tr>
+  <tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Criado desde</th>
+    <th>Role</th>
+    <th>Ação</th>
+  </tr>
   {% for u in utilizadores %}
   <tr>
     <td>{{ u.id }}</td>
     <td>{{ u.username }}</td>
+    <td>{{ u.created_at }}</td>
     <td>{{ u.role }}</td>
     <td>
-      <form method="post">
+     <!-- Formulário para atualizar role --> 
+      <form method="post" action="{{ url_for('roles') }}"> 
         <input type="hidden" name="user_id" value="{{ u.id }}">
-        <select name="role">
-          <option value="user">user</option>
-          <option value="admin">admin</option>
-        </select>
-        <button type="submit">Atualizar</button>
-      </form>
+        <input type="hidden" name="created_at" value="{{ u.created_at }}">
+        <select name="role"> 
+          <option value="utilizador" {% if u.role == "utilizador" %}selected{% endif %}>utilizador</option> 
+          <option value="admin" {% if u.role == "admin" %}selected{% endif %}>admin</option> 
+        </select> 
+        <button type="submit">atualizar</button> 
+      <!-- Botão de deletar apenas se não for admin --> 
+      {% if u.role != "admin" %} 
+      <form method="post" action="{{ url_for('delete_user', id=u.id) }}" style="display:inline;"> 
+        <button type="submit">deletar</button> 
+      </form> 
+      {% else %} 
+    
+      {% endif %}
     </td>
   </tr>
   {% endfor %}

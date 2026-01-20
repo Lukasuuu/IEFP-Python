@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Flask App",
+            "type": "python",
+            "request": "launch",
+            "program": "app.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/Python_CRUD/CRUD_WEB - Usuario admin",
+            "env": {
+                "FLASK_ENV": "development"
+            }
+        }
+    ]
+}
+
+}

@@ -3,17 +3,34 @@
 <h2>Lista de Utilizadores</h2>
 <a href="{{ url_for('novo') }}">Novo Utilizador</a>
 <table border="1">
-  <tr><th>ID</th><th>Nome</th><th>Email</th><th>Ações</th></tr>
+
   {% for u in utilizadores %}
-  <tr>
-    <td>{{ u.id }}</td>
-    <td>{{ u.nome }}</td>
-    <td>{{ u.email }}</td>
-    <td>
-      <a href="{{ url_for('editar', id=u.id) }}">Editar</a>
-      <a href="{{ url_for('apagar', id=u.id) }}">Apagar</a>
-    </td>
-  </tr>
+    {% if u.role == "admin" %}
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Criado Desde</th>
+        <th>Ações</th>
+        <td>{{ u.id }}</td>
+        <td>{{ u.nome }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.created_at }}</td>
+        <td>
+          <a href="{{ url_for('editar', id=u.id) }}">Editar</a>
+          <a href="{{ url_for('apagar', id=u.id) }}">Apagar</a>
+        </td>
+      </tr>
+    {% else %}
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Criado Desde</th>
+        <td>{{ u.nome }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.created_at }}</td>
+      </tr>
+    {% endif %}
   {% endfor %}
 </table>
 {% endblock %}

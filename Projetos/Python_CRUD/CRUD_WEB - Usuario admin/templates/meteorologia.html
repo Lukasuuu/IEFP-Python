@@ -7,7 +7,8 @@
 </form>
 
 {% if dados %}
-  <p>Temperatura: {{ dados.main.temp }} °C</p>
-  <p>Clima: {{ dados.weather[0].description }}</p>
+  <p>Cidade: {{ dados.get('name', 'N/A') }}</p>
+  <p>Temperatura: {{ dados.get('main', {}).get('temp', 'N/A') }} °C</p>
+  <p>Clima: {{ dados.get('weather', [{}])[0].get('description', 'N/A') }}</p>
 {% endif %}
 {% endblock %}
