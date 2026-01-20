@@ -1,18 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<html>
-<form method="POST">
-    <h2>Consultar Clima</h2>
-    <input type="text" name="cidade" placeholder="Digite a cidade" required>
-    <button type="submit">Consultar</button>
-    </form>
-    {% if dados %}
-                <div>
-                    <h2>🌤️ Tempo em {{ dados.name }}</h2>
-                    <p><strong>Temperatura:</strong> {{ dados.main.temp }}°C</p>
-                    <p><strong>Humidade:</strong> {{ dados.main.humidity }}%</p>
-                    <p><strong>Condição:</strong> {{ dados.weather[0].description }}</p>
-                </div>
-    {% endif %}
-</html>
+<h2>Meteorologia</h2>
+<form method="post">
+  Cidade: <input type="text" name="cidade">
+  <button type="submit">Buscar</button>
+</form>
+
+{% if dados %}
+  <p>Temperatura: {{ dados.main.temp }} °C</p>
+  <p>Clima: {{ dados.weather[0].description }}</p>
+{% endif %}
 {% endblock %}

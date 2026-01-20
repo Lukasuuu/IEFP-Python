@@ -1,34 +1,26 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h2>Gerir Permissões (Roles)</h2>
-
-<table border="1" cellpadding="8">
-    <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Role Atual</th>
-        <th>Alterar Role</th>
-    </tr>
-
-    {% for u in utilizadores %}
-    <tr>
-        <td>{{ u.id }}</td>
-        <td>{{ u.username }}</td>
-        <td>{{ u.role }}</td>
-        <td>
-            <form method="POST">
-                <input type="hidden" name="user_id" value="{{ u.id }}">
-                <select name="role">
-                    <option value="user" {% if u.role == 'user' %}selected{% endif %}>User</option>
-                    <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Admin</option>
-                </select>
-                <button type="submit">Atualizar</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
+<h2>Gerir Roles</h2>
+<table border="1">
+  <tr><th>ID</th><th>Username</th><th>Role</th><th>Ação</th></tr>
+  {% for u in utilizadores %}
+  <tr>
+    <td>{{ u.id }}</td>
+    <td>{{ u.username }}</td>
+    <td>{{ u.role }}</td>
+    <td>
+      <form method="post">
+        <input type="hidden" name="user_id" value="{{ u.id }}">
+        <select name="role">
+          <option value="user">user</option>
+          <option value="admin">admin</option>
+        </select>
+        <button type="submit">Atualizar</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
 </table>
-
 {% endblock %}
+
 

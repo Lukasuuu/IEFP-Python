@@ -1,30 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<!doctype html>
-<html lang="pt">
-  <h1><p align="center"><strong>IEFP Python Project 🐍</strong></p></h1>
-  <table border="1" cellpadding="6" align="center">
-    <tr>
-      <th>ID</th><th>Nome</th><th>Email</th><th>Criado em</th><th>Ações</th>
-    </tr>
-    {% for u in utilizadores %}
-    <tr>
-      <td>{{ u.id }}</td>
-      <td>{{ u.nome }}</td>
-      <td>{{ u.email }}</td>
-      <td>{{ u.created_at }}</td>
-      {#Se o utilizador  for admin nao tem acesso editar e apagar, se for joao por exemplo nao#}
-      {% if session['user_role'] == 'admin' %}
-      <td>
-        <a href="{{ url_for('editar', id=u.id) }}">Editar</a> |
-        <button type="button" onclick="if (confirm('Tem a certeza que deseja apagar este utilizador?')) { location.href='{{ url_for('apagar', id=u.id) }}'; }"> Apagar </button>
-      </td>
-      {% else %}
-        <td>Sem Acesso</td>
-      {% endif %}
-    </tr>
-    {% endfor %}
-    <p align="center"> <a href="{{ url_for('novo') }}">Novo Utilizador</p>
-  </table>
-</html>
-{%endblock%}
+<h2>Lista de Utilizadores</h2>
+<a href="{{ url_for('novo') }}">Novo Utilizador</a>
+<table border="1">
+  <tr><th>ID</th><th>Nome</th><th>Email</th><th>Ações</th></tr>
+  {% for u in utilizadores %}
+  <tr>
+    <td>{{ u.id }}</td>
+    <td>{{ u.nome }}</td>
+    <td>{{ u.email }}</td>
+    <td>
+      <a href="{{ url_for('editar', id=u.id) }}">Editar</a>
+      <a href="{{ url_for('apagar', id=u.id) }}">Apagar</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

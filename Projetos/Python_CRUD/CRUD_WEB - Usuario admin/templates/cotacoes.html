@@ -1,14 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-   {% if cotacoes %}
-   <form method="POST">
-    
-    </form>
-        <div>
-            <h2><p align="center">💰 Valores Atuais</p></h2>
-            <p align="center"><strong>Dólar:</strong> R$ {{ cotacoes['USDBRL']['bid'] }}</p>
-            <p align="center"><strong>Euro:</strong> R$ {{ cotacoes['EURBRL']['bid'] }}</p>
-            <p align="center"><strong>Bitcoin:</strong> R$ {{ cotacoes['BTCBRL']['bid'] }}</p>
-        </div>
-    {% endif %}
-{%endblock%}
+<h2>Cotações</h2>
+<p>Dólar: R$ {{ cotacoes.USDBRL.bid }}</p>
+<p>Euro: R$ {{ cotacoes.EURBRL.bid }}</p>
+<p>Bitcoin: R$ {{ cotacoes.BTCBRL.bid }}</p>
+{% endblock %}

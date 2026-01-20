@@ -19,12 +19,12 @@
  
   <p align="center">
   {% if session.get('user_role') == 'admin' %}
-    <a href="{{ url_for('gerir_roles') }}">Gerir Permissões (Roles)</a> |
+    <a href="{{ url_for('roles') }}">Gerir Permissões (Roles)</a> |
   {% endif %}
   <a href="{{ url_for('login') }}">Login</a> |
   <a href="{{ url_for('index') }}">Página Principal</a> |
   <a href="{{ url_for('meteorologia') }}">Meteorologia </a> |
-  <a href="{{ url_for('exibir_cotacoes')}}">Conversor De Moedas</a> |
+  <a href="{{ url_for('moedas')}}">Conversor De Moedas</a> |
   
   {% if session.username %}
   <a href="{{ url_for('logout') }}">Logout</a><p align="center">Logado como: {{ session.username }} </p>

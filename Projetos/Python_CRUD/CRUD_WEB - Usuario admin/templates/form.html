@@ -1,26 +1,10 @@
-<!doctype html>
-<html lang="pt">
-<head>
-  <meta charset="utf-8">
-  <title>{{ titulo }}</title>
-</head>
-<body>
-  <h1>{{ titulo }}</h1>
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ titulo }}</h2>
+<form method="post">
+  Nome: <input type="text" name="nome" value="{{ utilizador.nome if utilizador else '' }}"><br>
+  Email: <input type="text" name="email" value="{{ utilizador.email if utilizador else '' }}"><br>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}
 
-  <form method="post">
-    <p>
-      Nome:<br>
-      <input type="text" name="nome" required value="{{ utilizador.nome if utilizador else '' }}">
-    </p>
-
-    <p>
-      Email:<br>
-      <input type="email" name="email" required value="{{ utilizador.email if utilizador else '' }}">
-    </p>
-
-    <button type="submit">Guardar</button>
-    <a href="/">Cancelar</a>
-  </form>
-
-</body>
-</html>
