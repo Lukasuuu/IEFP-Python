@@ -21,7 +21,7 @@ app.secret_key="123"
 
 def index():  
     if "user_id" not in session:
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
     
     cnx = mysql_connector() # faz a ligacao com Base Dados
     cursor = cnx.cursor(dictionary=True)

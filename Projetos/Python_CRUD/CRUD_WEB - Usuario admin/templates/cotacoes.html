@@ -1,10 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Cotações</h1>
-<p>Dólar: R$ {{ cotacoes.get('USDBRL', {}).get('bid', 'N/A') }}</p> 
-<p>Euro: R$ {{ cotacoes.get('EURBRL', {}).get('bid', 'N/A') }}</p> 
-<p>Bitcoin: R$ {{ cotacoes.get('BTCBRL', {}).get('bid', 'N/A') }}</p>  
-<h3>Conversões</h3> 
-<p>1 Real em Dólar: US$ {{ (1 / cotacoes.get('USDBRL', {}).get('bid', 1)) | round(4) }}</p>
-<p>1 Real em Euro: € {{ (1 / cotacoes.get('EURBRL', {}).get('bid', 1)) | round(4) }}</p>
+<div style="display: flex; justify-content: center; margin-bottom: 30px;">
+  <div style="
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+  ">
+    <h2 style="font-size: 2em; color: #333; font-weight: 600; margin-bottom: 20px;">💱 Cotações</h2>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div>
+        <strong>💵 Dólar:</strong><br>
+        <span style="display: inline-block; background-color: #fff; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px;">
+          R$ {{ cotacoes.get('USDBRL', {}).get('bid', 'N/A') }}
+        </span>
+      </div>
+      <div>
+        <strong>💶 Euro:</strong><br>
+        <span style="display: inline-block; background-color: #fff; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px;">
+          R$ {{ cotacoes.get('EURBRL', {}).get('bid', 'N/A') }}
+        </span>
+      </div>
+      <div>
+        <strong>₿ Bitcoin:</strong><br>
+        <span style="display: inline-block; background-color: #fff; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px;">
+          R$ {{ cotacoes.get('BTCBRL', {}).get('bid', 'N/A') }}
+        </span>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 25px; color: #007bff;">🔄 Conversões</h3>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 10px;">
+      <div>
+        <strong>1 Real em Dólar:</strong><br>
+        <span style="display: inline-block; background-color: #fff; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px;">
+          US$ {{ (1 / cotacoes.get('USDBRL', {}).get('bid', 1)) | round(4) }}
+        </span>
+      </div>
+      <div>
+        <strong>1 Real em Euro:</strong><br>
+        <span style="display: inline-block; background-color: #fff; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px;">
+          € {{ (1 / cotacoes.get('EURBRL', {}).get('bid', 1)) | round(4) }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

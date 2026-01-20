@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Login</h2>
-<form method="post">
-  Username: <input type="text" name="username"><br>
-  Password: <input type="password" name="password"><br>
-  <button type="submit">Entrar</button>
-</form>
-<a href="{{ url_for('register') }}">Registrar</a>
+<div style="display: flex; justify-content: center; margin-bottom: 30px;">
+  <div style="border: 1px solid #ccc; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: #f9f9f9; width: 100%; max-width: 300px;">
+    <h1 style="font-size: 2.5em; color: #333; font-weight: 600; margin: 0; text-align: center; margin-bottom: 20px;">Login</h1>
+    <form method="post" style="width: 100%;">
+      <input type="text" name="username" placeholder="Username" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
+      <input type="password" name="password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
+      <button type="submit" style="width: 100%; padding: 10px; margin-bottom: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Entrar</button>
+      <button type="button" onclick="window.location.href='{{ url_for('register') }}'" style="width: 100%; padding: 10px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Registrar</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

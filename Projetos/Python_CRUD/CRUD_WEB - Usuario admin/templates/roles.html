@@ -9,34 +9,36 @@
     <th>Role</th>
     <th>Ação</th>
   </tr>
+
   {% for u in utilizadores %}
   <tr>
     <td>{{ u.id }}</td>
     <td>{{ u.username }}</td>
     <td>{{ u.created_at }}</td>
     <td>{{ u.role }}</td>
+
     <td>
-     <!-- Formulário para atualizar role --> 
-      <form method="post" action="{{ url_for('roles') }}"> 
+      <!-- Formulário para atualizar role -->
+      <form method="post" action="{{ url_for('roles') }}" style="display:inline;">
         <input type="hidden" name="user_id" value="{{ u.id }}">
         <input type="hidden" name="created_at" value="{{ u.created_at }}">
-        <select name="role"> 
-          <option value="utilizador" {% if u.role == "utilizador" %}selected{% endif %}>utilizador</option> 
-          <option value="admin" {% if u.role == "admin" %}selected{% endif %}>admin</option> 
-        </select> 
-        <button type="submit">atualizar</button> 
-      <!-- Botão de deletar apenas se não for admin --> 
-      {% if u.role != "admin" %} 
-      <form method="post" action="{{ url_for('delete_user', id=u.id) }}" style="display:inline;"> 
-        <button type="submit">deletar</button> 
-      </form> 
-      {% else %} 
-    
+
+        <select name="role">
+          <option value="utilizador" {% if u.role == "utilizador" %}selected{% endif %}>utilizador</option>
+          <option value="admin" {% if u.role == "admin" %}selected{% endif %}>admin</option>
+        </select>
+
+        <button type="submit">Atualizar</button>
+      </form>
+
+      <!-- Botão de deletar apenas se não for admin -->
+      {% if u.role != "admin" %}
+      <form action="{{ url_for('delete_user', id=u.id) }}" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+      </form>
       {% endif %}
     </td>
   </tr>
   {% endfor %}
 </table>
 {% endblock %}
-
-
