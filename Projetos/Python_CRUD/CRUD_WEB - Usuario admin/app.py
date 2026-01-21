@@ -81,9 +81,9 @@ def novo():
     if "user_id" not in session:
         return redirect(url_for("login"))  # Verifica login
     # Opcional: só admins podem criar usuários
-    if session.get("user_role") != "admin":
-        flash("Acesso negado.")
-        return redirect(url_for("index"))
+    #if session.get("user_role") != "admin":
+        #flash("Acesso negado.")
+        #return redirect(url_for("index"))
     
     if request.method == "POST":
         nome = request.form["nome"]  # Nome do novo usuário
