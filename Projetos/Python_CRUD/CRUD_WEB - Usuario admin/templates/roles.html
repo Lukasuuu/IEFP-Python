@@ -1,44 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Gerir Permissões</h2>
-<table border="1">
-  <tr>
-    <th>ID</th>
-    <th>Username</th>
-    <th>Criado desde</th>
-    <th>Role</th>
-    <th>Ação</th>
-  </tr>
+<div style="display: flex; justify-content: center; margin-bottom: 30px;">
+  <div style="
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+  ">
+    <h2 style="font-size: 2em; color: #333; font-weight: 600; margin-bottom: 20px;">🔐 Gerir Permissões</h2>
 
-  {% for u in utilizadores %}
-  <tr>
-    <td>{{ u.id }}</td>
-    <td>{{ u.username }}</td>
-    <td>{{ u.created_at }}</td>
-    <td>{{ u.role }}</td>
-
-    <td>
-      <!-- Formulário para atualizar role -->
-      <form method="post" action="{{ url_for('roles') }}" style="display:inline;">
-        <input type="hidden" name="user_id" value="{{ u.id }}">
-        <input type="hidden" name="created_at" value="{{ u.created_at }}">
-
-        <select name="role">
-          <option value="utilizador" {% if u.role == "utilizador" %}selected{% endif %}>utilizador</option>
-          <option value="admin" {% if u.role == "admin" %}selected{% endif %}>admin</option>
-        </select>
-
-        <button type="submit">Atualizar</button>
-      </form>
-
-      <!-- Botão de deletar apenas se não for admin -->
-      {% if u.role != "admin" %}
-      <form action="{{ url_for('delete_user', id=u.id) }}" method="post" style="display:inline;">
-        <button type="submit" class="btn btn-danger">Eliminar</button>
-      </form>
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+      <thead>
+        <tr style="background-color: #e9ecef;">
+          <th style="padding: 12px; border: 1px solid #ccc;">ID</th>
+          <th style="padding: 12px; border: 1px solid #ccc;">Username</th>
+          <th style="padding: 12px; border: 1px solid #ccc;">Criado Desde</th>
+          <th style="padding: 12px; border: 1px solid #ccc;">Role</th>
+          <th style="padding: 12px; border: 1px solid #ccc;">Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in utilizadores %}
+        <tr style="background-color: #fff;">
+          <td style="padding: 10px; border: 1px solid #ccc;">{{ u.id }}</td>
+          <td style="padding: 10px; border: 1px solid #ccc;">{{ u.username }}</td>
+          <td style="padding: 10px; border: 1px solid #ccc;">{{ u.created_at }}</td>
+          <td style="padding: 10px; border: 1px solid #ccc;">{{ u.role }}</td>
+          <td style="padding: 10px; border: 1px solid #ccc;">
+            <form method="post" action="{{ url_for('roles') }}" style="display: inline-block; margin-bottom: 5px;">
+              <input type="hidden" name="user_id" value="{{ u.id }}">
+              <input type="hidden" name="created_at" value="{{ u.created_at }}">
+              <select name="role" style="padding: 6px; border-radius: 4px; border: 1px solid #ccc;">
+                <option value="utilizador" {% if u.role == "utilizador" %}selected{% endif %}>utilizador</option>
+                <option value="admin" {% if u.role == "admin" %}selected{% endif %}>admin</option>
+              </select>
+              <button type="submit" style="padding: 6px 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Atualizar
+              </button>
+            </form>
+            {% if u.role != "admin" %}
+            <form action="{{ url_for('delete_user', id=u.id) }}" method="post" style="display: inline-block;">
+              <button type="submit" style="padding: 6px 10px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Eliminar
+              </button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
