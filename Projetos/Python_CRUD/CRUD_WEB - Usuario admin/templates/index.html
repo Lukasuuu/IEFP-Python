@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- ============================= -->
+<!--   CONTAINER PRINCIPAL        -->
+<!-- ============================= -->
 <div style="display: flex; justify-content: center; margin-bottom: 30px;">
   <div style="
     border: 1px solid #ccc;
@@ -11,59 +15,109 @@
     max-width: 800px;
     text-align: center;
   ">
-    <h2 style="font-size: 2em; color: #333; font-weight: 600; margin-bottom: 10px;">Lista de Utilizadores</h2>
 
+    <!-- ============================= -->
+    <!--   TÍTULO DA PÁGINA           -->
+    <!-- ============================= -->
+    <h2 style="font-size: 2em; color: #333; font-weight: 600; margin-bottom: 10px;">
+      Lista de Utilizadores
+    </h2>
+
+    <!-- ============================= -->
+    <!--   MENSAGEM ADMIN / USER      -->
+    <!-- ============================= -->
     {% if is_admin %}
-      <p style="color: green; font-weight: bold; margin-bottom: 15px;">Você está logado como administrador.</p>
-            <div style="margin-bottom: 15px;">
-        <a href="{{ url_for('novo') }}" style="padding: 8px 12px; background-color: #007bff; color: white; border-radius: 4px; text-decoration: none;">Novo Utilizador</a>
+      <!-- Mensagem exclusiva para administradores -->
+      <p style="color: green; font-weight: bold; margin-bottom: 15px;">
+        Você está logado como administrador.
+      </p>
+
+      <!-- Botão para criar novo utilizador -->
+      <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('novo') }}"
+           style="padding: 8px 12px; background-color: #007bff; color: white; border-radius: 4px; text-decoration: none;">
+          Novo Utilizador
+        </a>
       </div>
+
     {% else %}
-      <p style="background-color: #e9f5ff; color: #007bff; padding: 10px 15px; border: 1px solid #b6e0fe; border-radius: 6px; font-weight: 500; margin-bottom: 15px;">
+      <!-- Mensagem para utilizadores normais -->
+      <p style="background-color: #e9f5ff; color: #007bff; padding: 10px 15px;
+                border: 1px solid #b6e0fe; border-radius: 6px; font-weight: 500; margin-bottom: 15px;">
         👋 Bem-vindo ao nosso servidor, <strong>{{ session.username }}</strong>.
       </p>
-            <div style="margin-bottom: 15px;">
-        <a href="{{ url_for('novo') }}" style="padding: 8px 12px; background-color: #007bff; color: white; border-radius: 4px; text-decoration: none;">Novo Utilizador</a>
+
+      <!-- Botão para criar novo utilizador -->
+      <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('novo') }}"
+           style="padding: 8px 12px; background-color: #007bff; color: white; border-radius: 4px; text-decoration: none;">
+          Novo Utilizador
+        </a>
       </div>
     {% endif %}
 
+    <!-- ============================= -->
+    <!--   TABELA DE UTILIZADORES     -->
+    <!-- ============================= -->
     <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
       <thead>
         <tr style="background-color: #e9ecef;">
+
+          <!-- Coluna ID só aparece para admin -->
           {% if is_admin %}
             <th style="padding: 12px; border: 1px solid #ccc;">ID</th>
           {% endif %}
+
           <th style="padding: 12px; border: 1px solid #ccc;">Nome</th>
           <th style="padding: 12px; border: 1px solid #ccc;">Email</th>
           <th style="padding: 12px; border: 1px solid #ccc;">Criado Desde</th>
+
+          <!-- Coluna Ações só aparece para admin -->
           {% if is_admin %}
             <th style="padding: 12px; border: 1px solid #ccc;">Ações</th>
           {% endif %}
         </tr>
       </thead>
+
       <tbody>
+
+        <!-- Loop que percorre todos os utilizadores -->
         {% for u in utilizadores %}
           <tr style="background-color: #fff;">
+
+            <!-- ID só para admin -->
             {% if is_admin %}
               <td style="padding: 10px; border: 1px solid #ccc;">{{ u.id }}</td>
             {% endif %}
+
+            <!-- Dados do utilizador -->
             <td style="padding: 10px; border: 1px solid #ccc;">{{ u.nome }}</td>
             <td style="padding: 10px; border: 1px solid #ccc;">{{ u.email }}</td>
             <td style="padding: 10px; border: 1px solid #ccc;">{{ u.created_at }}</td>
+
+            <!-- Botões de ação (apenas admin) -->
             {% if is_admin %}
             <td style="padding: 10px; border: 1px solid #ccc;">
+
+              <!-- Botão Editar (GET) -->
               <a href="{{ url_for('editar', id=u.id) }}"
-                style="padding: 6px 10px; background-color: #ffc107; color: #333; border-radius: 4px; text-decoration: none; margin-right: 5px;">
+                style="padding: 6px 10px; background-color: #ffc107; color: #333;
+                       border-radius: 4px; text-decoration: none; margin-right: 5px;">
                 ✏️ Editar
               </a>
+
+              <!-- Botão Apagar (POST) -->
               <form action="{{ url_for('apagar', id=u.id) }}" method="POST" style="display:inline;">
                 <button type="submit"
-                        style="padding: 6px 10px; background-color: #dc3545; color: white; border-radius: 4px; border: none; cursor: pointer;">
+                        style="padding: 6px 10px; background-color: #dc3545; color: white;
+                               border-radius: 4px; border: none; cursor: pointer;">
                   🗑️ Apagar
                 </button>
               </form>
+
             </td>
             {% endif %}
+
           </tr>
         {% endfor %}
       </tbody>
