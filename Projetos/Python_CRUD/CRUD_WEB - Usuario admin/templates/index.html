@@ -51,16 +51,18 @@
             <td style="padding: 10px; border: 1px solid #ccc;">{{ u.email }}</td>
             <td style="padding: 10px; border: 1px solid #ccc;">{{ u.created_at }}</td>
             {% if is_admin %}
-              <td style="padding: 10px; border: 1px solid #ccc;">
-                <a href="{{ url_for('editar', id=u.id) }}"
-                   style="padding: 6px 10px; background-color: #ffc107; color: #333; border-radius: 4px; text-decoration: none; margin-right: 5px;">
-                  ✏️ Editar
-                </a>
-                <a href="{{ url_for('apagar', id=u.id) }}"
-                   style="padding: 6px 10px; background-color: #dc3545; color: white; border-radius: 4px; text-decoration: none;">
+            <td style="padding: 10px; border: 1px solid #ccc;">
+              <a href="{{ url_for('editar', id=u.id) }}"
+                style="padding: 6px 10px; background-color: #ffc107; color: #333; border-radius: 4px; text-decoration: none; margin-right: 5px;">
+                ✏️ Editar
+              </a>
+              <form action="{{ url_for('apagar', id=u.id) }}" method="POST" style="display:inline;">
+                <button type="submit"
+                        style="padding: 6px 10px; background-color: #dc3545; color: white; border-radius: 4px; border: none; cursor: pointer;">
                   🗑️ Apagar
-                </a>
-              </td>
+                </button>
+              </form>
+            </td>
             {% endif %}
           </tr>
         {% endfor %}
