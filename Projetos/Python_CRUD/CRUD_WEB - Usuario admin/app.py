@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import mysql.connector
 import requests
+from datetime import datetime
 
 # Função para conectar ao banco de dados MySQL
 # Retorna o objeto de conexão
@@ -313,6 +314,9 @@ def moedas():
     
     return render_template("cotacoes.html", cotacoes=cotacoes)
 
+@app.context_processor
+def inject_now():
+        return {'now': datetime.now}
 
 if __name__ == "__main__":
     app.run(debug=True)  # Executa app em modo debug
