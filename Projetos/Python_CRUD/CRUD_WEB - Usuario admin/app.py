@@ -13,7 +13,7 @@ def ligar_bd():
         host="62.28.39.135",
         user="efa0125",
         password="123.Abc",
-        database="efa0125_25_formacao_crud"
+        database="efa0125_08_vet_clinic"
     )
 
 # Criação da aplicação Flask
