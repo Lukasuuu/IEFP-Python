@@ -10,7 +10,7 @@ def ligar_db():
                 host="192.168.64.14",
                 user="formando",
                 password="123",
-                database="clinica_python")
+                database="efa0125_08_vet_clinic")
 print(input(ligar_db()))
                 
 ################ CRIAÇÃO DA APLICAÇÃO FLASK #################

@@ -13,5 +13,28 @@
     ],
     "python-envs.pythonProjects": [],
     "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda"
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "62.28.39.135",
+            "sshOptions": {
+                "port": 62444,
+                "host": "62.28.39.135",
+                "username": "efa0125",
+                "password": "123.Abc"
+            },
+            "driver": "MySQL",
+            "name": "efa0125",
+            "connectString": "62.28.39.135",
+            "group": "efa0125",
+            "database": "efa0125_08_vet_clinic",
+            "username": "efa0125"
+        }
+    ]
 }
