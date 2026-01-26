@@ -7,11 +7,11 @@ import datetime
 
 def ligar_db():
        return mysql.connector.connect(
-                host="192.168.64.14",
-                user="formando",
-                password="123",
-                database="efa0125_08_vet_clinic")
-print(input(ligar_db()))
+                host="62.28.39.135",
+                user="efa0125",
+                password="123.Abc",
+                database="efa0125_8_vet_clinic")
+
                 
 ################ CRIAÇÃO DA APLICAÇÃO FLASK #################
 app = Flask(__name__)
