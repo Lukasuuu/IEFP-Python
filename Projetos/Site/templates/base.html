@@ -1,6 +1,55 @@
-{% block content %} 
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Clínica Veterinária{% endblock %}</title>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('index') }}">Início</a>
 
-{% endblock %}
+    {% if session.get("user_id") %}
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+
+      {% if session.get("role") in ["admin", "staff"] %}
+        <a href="{{ url_for('clientes_listar') }}">Clientes</a>
+        <a href="{{ url_for('animais_listar') }}">Animais</a>
+        <a href="{{ url_for('consultas_listar') }}">Consultas</a>
+      {% endif %}
+
+      {% if session.get("role") == "admin" %}
+        <a href="{{ url_for('users_listar') }}">Users</a>
+      {% endif %}
+
+      {% if session.get("role") == "cliente" %}
+        <a href="{{ url_for('minha_conta') }}">Minha conta</a>
+        <a href="{{ url_for('meus_animais') }}">Meus animais</a>
+        <a href="{{ url_for('minhas_consultas') }}">Minhas consultas</a>
+        <a href="{{ url_for('mudar_password') }}">Mudar password</a>
+      {% endif %}
+
+      <a href="{{ url_for('logout') }}">Logout ({{ session.get("username") }})</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+  </nav>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <hr>
+      <ul>
+        {% for m in messages %}
+          <li>{{ m }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <hr>
+
+  {% block content %}{% endblock %}
+</body>
+</html>
 <footer>
     © {{ ano }} — Animals - Clinica Veterinária
 </footer>

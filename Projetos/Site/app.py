@@ -15,6 +15,8 @@ def ligar_db():
                 
 ################ CRIAÇÃO DA APLICAÇÃO FLASK #################
 app = Flask(__name__)
+# Chave secreta usada para sessões (login)
+app.secret_key = "123"
 
 #injetar variáveis ou funções automaticamente em TODOS os templates do Flask
 @app.context_processor
@@ -25,6 +27,11 @@ def datetime_ano():
 def index():
         
         return render_template("index.html")
+
+@app.route("/login", methods=["GET","POST"])
+def login():
+       
+       return render_template("login.html")
 
 if __name__ == "__main__": 
       app.run(debug=True)
