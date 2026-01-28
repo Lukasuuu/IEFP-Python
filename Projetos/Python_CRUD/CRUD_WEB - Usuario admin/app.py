@@ -39,10 +39,10 @@ def index():
 
     # Busca todos os utilizadores ordenados do mais recente para o mais antigo
     cur.execute("SELECT id, nome, email, created_at FROM utilizadores ORDER BY id DESC")
-    utilizadores = cur.fetchall()
+    utilizadores = cur.fetchall() # traz todas as linhas parao Python
 
-    cur.close()
-    cnx.close()
+    cur.close() #encerra a execucao da tabela 
+    cnx.close() #encerra a conexao com a base de dados
 
     # Verifica se o utilizador logado é admin
     is_admin = session.get("user_role") == "admin"
@@ -211,8 +211,6 @@ def login():
 
         cursor.close()
         cnx.close()
-
-        print("DEBUG: utilizador from DB ->", utilizador)
 
         # Verifica senha
         if utilizador and utilizador.get("password") == password:

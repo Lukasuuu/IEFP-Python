@@ -7,11 +7,10 @@ import datetime
 
 def ligar_db():
        return mysql.connector.connect(
-                  host="127.0.0.1",
-                  port="3306",
-                  user="root",
-                  password="123.Abc",
-                  database="efa0125_08_vet_clinic"
+                host="62.28.39.135",
+                user="efa0125",
+                password="123.Abc",
+                database="efa0125_08_vet_clinic"
 )
 
 def testar_db():
