@@ -1,26 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Lista de Consultas{% endblock %}
-
+{% block title %}Minhas Consultas{% endblock %}
 {% block content %}
-<h1>Lista de Consultas</h1>
-
-<table>
+<h1>Minhas Consultas</h1>
+<table border="1" cellpadding="5">
   <tr>
     <th>ID</th>
-    <th>Animal ID</th>
+    <th>Animal</th>
     <th>Data/Hora</th>
     <th>Motivo</th>
     <th>Notas</th>
-    <th>Criado em</th>
   </tr>
   {% for consulta in consultas %}
   <tr>
     <td>{{ consulta.id }}</td>
-    <td>{{ consulta.animal_id }}</td>
+    <td>{{ consulta.animal_nome }}</td>
     <td>{{ consulta.data_hora }}</td>
     <td>{{ consulta.motivo }}</td>
     <td>{{ consulta.notas }}</td>
-    <td>{{ consulta.created_at }}</td>
   </tr>
   {% endfor %}
 </table>

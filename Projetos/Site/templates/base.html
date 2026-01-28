@@ -25,7 +25,7 @@
         <a href="{{ url_for('minha_conta') }}">Minha conta</a>
         <a href="{{ url_for('meus_animais') }}">Meus animais</a>
         <a href="{{ url_for('minhas_consultas') }}">Minhas consultas</a>
-        <a href="{{ url_for('mudar_password') }}">Mudar password</a>
+        
       {% endif %}
 
       <a href="{{ url_for('logout') }}">Logout ({{ session.get("username") }})</a>

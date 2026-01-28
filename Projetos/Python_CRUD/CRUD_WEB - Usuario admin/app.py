@@ -22,7 +22,6 @@ app = Flask(__name__)
 # Chave secreta usada para sessões (login)
 app.secret_key = "123"
 
-
 # ============================================================
 # ROTA PRINCIPAL (LISTA DE UTILIZADORES)
 # ============================================================

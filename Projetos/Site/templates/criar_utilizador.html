@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Criar Utilizador{% endblock %}
+{% block content %}
+<h2>Criar Utilizador</h2>
+<form method="POST">
+  <label>Username:</label><input type="text" name="username"><br>
+  <label>Password:</label><input type="password" name="password"><br>
+  <label>Role:</label>
+  <select name="role">
+    <option value="admin">Admin</option>
+    <option value="staff">Staff</option>
+    <option value="cliente">Cliente</option>
+  </select><br>
+  <button type="submit">Criar</button>
+</form>
+{% endblock %}

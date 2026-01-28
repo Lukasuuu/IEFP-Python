@@ -1,2 +1,35 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Lista de Clientes{% endblock %}
+
+{% block content %}
+<h1>Lista de Clientes</h1>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Nome</th>
+    <th>Telefone</th>
+    <th>Email</th>
+    <th>Morada</th>
+    <th>Criado em</th>
+  </tr>
+  {% for cliente in clientes %}
+  <tr>
+    <td>{{ cliente.id }}</td>
+    <td>{{ cliente.nome }}</td>
+    <td>{{ cliente.telefone }}</td>
+    <td>{{ cliente.email }}</td>
+    <td>{{ cliente.morada }}</td>
+    <td>{{ cliente.created_at }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% if role == "admin" or role == "staff" %}
+    <a href="{{ url_for('cliente_editar', id=cliente.id) }}">Editar</a>
+{% endif %}
+
+{% if role == "admin" %}
+    <a href="{{ url_for('cliente_apagar', id=cliente.id) }}">Apagar</a>
+{% endif %}
+
+{% endblock %}
