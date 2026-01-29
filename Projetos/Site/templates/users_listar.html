@@ -9,7 +9,6 @@
     <th>ID</th>
     <th>Username</th>
     <th>Role</th>
-    <th>Cliente ID</th>
     <th>Criado em</th>
   </tr>
   {% for user in users %}
@@ -17,7 +16,6 @@
     <td>{{ user.id }}</td>
     <td>{{ user.username }}</td>
     <td>{{ user.role }}</td>
-    <td>{{ user.cliente_id }}</td>
     <td>{{ user.created_at }}</td>
   </tr>
   {% endfor %}

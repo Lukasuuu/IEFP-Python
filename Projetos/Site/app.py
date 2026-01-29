@@ -140,7 +140,7 @@ def criar_cliente():
 
 
 @app.route("/cliente_editar/<int:id>", methods=["GET", "POST"])
-def editar(id):
+def editar_cliente(id):
     if "user_id" not in session:
         return redirect(url_for("login"))
 
@@ -177,10 +177,10 @@ def editar(id):
     cursor.close()
     conexao.close()
 
-    return render_template("cliente_editar.html", cliente=cliente)
+    return render_template("editar_cliente.html", cliente=cliente)
 
 @app.route("/apagar/<int:id>")
-def apagar(id):
+def apagar_cliente(id):
     if "user_id" not in session:
         return redirect(url_for("login"))
 

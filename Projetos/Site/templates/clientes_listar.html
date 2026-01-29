@@ -13,6 +13,7 @@
     <th>Morada</th>
     <th>Criado em</th>
   </tr>
+
   {% for cliente in clientes %}
   <tr>
     <td>{{ cliente.id }}</td>
@@ -21,15 +22,18 @@
     <td>{{ cliente.email }}</td>
     <td>{{ cliente.morada }}</td>
     <td>{{ cliente.created_at }}</td>
+
+    <td>
+     {% if session.get("role") == "admin" or session.get("role") == "staff" %}
+        <a href="{{ url_for('editar_cliente', id=cliente.id) }}">Editar</a>
+      {% endif %}
+
+      {% if session.get("role") == "admin" %}
+        <a href="{{ url_for('apagar_cliente', id=cliente.id) }}">Apagar</a>
+      {% endif %}
+    </td>
   </tr>
   {% endfor %}
 </table>
-{% if role == "admin" or role == "staff" %}
-    <a href="{{ url_for('cliente_editar', id=cliente.id) }}">Editar</a>
-{% endif %}
-
-{% if role == "admin" %}
-    <a href="{{ url_for('cliente_apagar', id=cliente.id) }}">Apagar</a>
-{% endif %}
 
 {% endblock %}

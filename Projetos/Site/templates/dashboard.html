@@ -11,12 +11,14 @@
     <a href="{{ url_for('clientes_listar') }}">Lista de Clientes</a>
     <a href="{{ url_for('criar_utilizador') }}">Criar Utilizador</a>
     <a href="{{ url_for('criar_cliente') }}">Criar Cliente</a>
+   
     <!-- ... outros botões ... -->
 
   {% elif role == "staff" %}
      <!-- Blocos para staff: ver/criar/editar clientes, animais, consultas (sem apagar) -->
     <a href="{{ url_for('clientes_listar') }}">Lista de Clientes</a>
     <a href="{{ url_for('criar_cliente') }}">Criar Cliente</a>
+   
     <!-- ... outros botões ... -->
 
   {% else %}
