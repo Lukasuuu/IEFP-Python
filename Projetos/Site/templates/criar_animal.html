@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Criar Animal{% endblock %}
+
+{% block content %}
+<h1>Criar Animal</h1>
+
+<form method="POST">
+
+  <!-- Nome do animal -->
+  <label for="nome">Nome:</label><br>
+  <input type="text" name="nome" required><br><br>
+
+  <!-- Espécie -->
+  <label for="especie">Espécie:</label><br>
+  <input type="text" name="especie" required><br><br>
+
+  <!-- Raça -->
+  <label for="raca">Raça:</label><br>
+  <input type="text" name="raca" required><br><br>
+
+  <!-- Data de nascimento -->
+  <label for="data_nascimento">Data de Nascimento:</label><br>
+  <input type="date" name="data_nascimento" required><br><br>
+
+  <!-- Admin e staff escolhem o cliente -->
+  {% if session.get("role") in ["admin", "staff"] %}
+    <label for="cliente_id">Cliente:</label><br>
+    <select name="cliente_id" required>
+      <option value="">-- Selecione o cliente --</option>
+      {% for cliente in clientes %}
+        <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+      {% endfor %}
+    </select><br><br>
+  {% endif %}
+
+  <button type="submit">Salvar</button>
+
+</form>
+{% endblock %}

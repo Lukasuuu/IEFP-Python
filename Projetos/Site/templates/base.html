@@ -5,51 +5,56 @@
   <title>{% block title %}Clínica Veterinária{% endblock %}</title>
 </head>
 <body>
-  <nav>
-    <a href="{{ url_for('index') }}">Início</a>
+    <h1>Animals - Clinica Veterinária</h1>
+    <p>Plataforma para gestão de clientes, animais e consultas.</p>
+  
+<nav>
 
-    {% if session.get("user_id") %}
-      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+  {% if session.get("user_id") %}
+  <a href="{{ url_for('dashboard') }}">Home</a>
 
-      {% if session.get("role") in ["admin", "staff"] %}
-        <a href="{{ url_for('clientes_listar') }}">Clientes</a>
-        <a href="{{ url_for('animais_listar') }}">Animais</a>
-        <a href="{{ url_for('consultas_listar') }}">Consultas</a>
-      {% endif %}
+  {% if session.get("role") in ["admin", "staff"] %}
+    <a href="{{ url_for('clientes_listar') }}">Clientes</a>
+    <a href="{{ url_for('animais_listar') }}">Animais</a>
+    <a href="{{ url_for('consultas_listar') }}">Consultas</a>
+    <a href="{{ url_for('utilizadores_listar') }}">Utilizadores</a>
+    <a href="{{ url_for('criar_utilizador') }}">Criar Novo Utilizador</a>
+    <a href="{{ url_for('criar_cliente') }}">Criar Novo Cliente</a>
+    <a href="{{ url_for('criar_animal') }}">Criar Novo Animal</a>
+    <a href="{{ url_for('criar_consulta') }}">Criar Nova Consulta</a>
+    {% if session.get("role") == "admin" %}
+      <a href="{{ url_for('vincular_cliente_utilizador') }}">Vincular Cliente a Utilizador</a>
+    {% endif %}
+  {% endif %}
 
-      {% if session.get("role") == "admin" %}
-        <a href="{{ url_for('users_listar') }}">Users</a>
-      {% endif %}
+  {% if session.get("role") == "cliente" %}
+    <a href="{{ url_for('minha_conta') }}">Minha conta</a>
+    <a href="{{ url_for('meus_animais') }}">Meus animais</a>
+    <a href="{{ url_for('minhas_consultas') }}">Minhas consultas</a> 
+  {% endif %}
 
-      {% if session.get("role") == "cliente" %}
-        <a href="{{ url_for('minha_conta') }}">Minha conta</a>
-        <a href="{{ url_for('meus_animais') }}">Meus animais</a>
-        <a href="{{ url_for('minhas_consultas') }}">Minhas consultas</a>
+  {% if "user_id" not in session %}
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('login') }}">Área do Utilizador</a>
+  {% endif %}
+  
+  {% if "user_id" in session %}
+  <a href="{{ url_for('logout') }}">Logout ({{ session.get("username") }})</a>
+  {% endif %}
+  {% else %}
+  <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</nav>
+
+  <main>
+    {% block content %}
         
-      {% endif %}
+    {% endblock %}
+  </main>
 
-      <a href="{{ url_for('logout') }}">Logout ({{ session.get("username") }})</a>
-    {% else %}
-      <a href="{{ url_for('login') }}">Login</a>
-    {% endif %}
-  </nav>
-
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <hr>
-      <ul>
-        {% for m in messages %}
-          <li>{{ m }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-
-  <hr>
-
-  {% block content %}{% endblock %}
-</body>
 <footer>
     © {{ ano }} — Animals - Clinica Veterinária
 </footer>
+
+</body>
 </html>

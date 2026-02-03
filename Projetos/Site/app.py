@@ -66,184 +66,376 @@ def index():
     )
 
 
-# ============================================================
+## ============================================================
 # ROTA DE LOGIN
 # ============================================================
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
-    # Se o formulário foi enviado (POST)
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+
+        conexao = ligar_db()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT id, username, password, role
+            FROM users
+            WHERE username = %s
+        """, (username,))
+        user = cursor.fetchone()
+
+        cursor.close()
+        conexao.close()
+
+        # Verifica user e password
+        if user and user["password"] == password:
+
+            # Guarda dados básicos
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            session["role"] = user["role"]
+
+            # Se for cliente, buscar o cliente_id correspondente
+            if user["role"] == "cliente":
+                conexao = ligar_db()
+                cursor = conexao.cursor(dictionary=True)
+
+                cursor.execute("SELECT id FROM clientes WHERE user_id = %s", (user["id"],))
+                cliente = cursor.fetchone()
+
+                cursor.close()
+                conexao.close()
+
+                if cliente:
+                    session["cliente_id"] = cliente["id"]
+
+            return redirect(url_for("dashboard"))
+
+        flash("Login ou password incorreto.")
+        return redirect(url_for("login"))
+
+    return render_template("login.html")
+
+
+
+# ============================================================
+# ROTA PARA CRIAR USER (apenas admin)
+# ============================================================
+@app.route("/criar_user", methods=["GET", "POST"])
+def criar_user():
+
+    # Apenas administradores podem aceder a esta rota
+    if "user_id" not in session or session.get("role") != "admin":
+        flash("Acesso restrito.")
+        return redirect(url_for("dashboard"))
+
+    # Se o formulário foi enviado
+    if request.method == "POST":
+
+        # Dados enviados pelo formulário
+        username = request.form["username"]
+        password = request.form["password"]
+        role = request.form["role"]
+        nome = request.form["nome"]
+        email = request.form["email"]
 
         # Liga ao banco
         conexao = ligar_db()
         cursor = conexao.cursor(dictionary=True)
 
-        # Procura o utilizador pelo username
-        cursor.execute(
-            "SELECT id, username, password, role FROM users WHERE username = %s",
-            (username,)
-        )
-        utilizador = cursor.fetchone()
+        # Cria o user na tabela correta
+        cursor.execute("""
+            INSERT INTO users (username, password, role)
+            VALUES (%s, %s, %s)
+        """, (username, password, role))
 
-        cursor.close()
-        conexao.close()
+        user_id = cursor.lastrowid  # ID do novo user
 
-        # Verifica se encontrou o utilizador e se a password está correta
-        if utilizador and utilizador.get("password") == password:
+        # Se o user for cliente, cria também o cliente vinculado
+        if role == "cliente":
+            cursor.execute("""
+                INSERT INTO clientes (nome, email, user_id)
+                VALUES (%s, %s, %s)
+            """, (nome, email, user_id))
 
-            # Guarda informações na sessão
-            session["user_id"] = utilizador["id"]
-            session["username"] = utilizador["username"]
-            session["role"] = utilizador["role"]
-
-            # Redireciona para o dashboard
-            return redirect(url_for("dashboard"))
-
-        else:
-            # Caso falhe, mostra mensagem e volta ao login
-            flash("Login ou password incorreto.")
-            return redirect(url_for("login"))
-
-    # Se for GET, apenas mostra o formulário de login
-    return render_template("login.html")
-
-
-# ============================================================
-# CRIAR UTILIZADOR (APENAS ADMIN)
-# ============================================================
-@app.route("/criar_utilizador", methods=["GET", "POST"])
-def criar_utilizador():
-
-    # Apenas administradores podem aceder a esta rota
-    if "user_id" not in session or session.get("role") != "admin":
-        flash("Acesso negado.")
-        return redirect(url_for("dashboard"))
-
-    # Se o formulário foi enviado
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        role = request.form["role"]
-
-        # Liga ao banco
-        conexao = ligar_db()
-        cursor = conexao.cursor()
-
-        # Insere o novo utilizador
-        cursor.execute(
-            "INSERT INTO users (username, password, role) VALUES (%s, %s, %s)",
-            (username, password, role)
-        )
-
+        # Salva e fecha conexão
         conexao.commit()
         cursor.close()
         conexao.close()
 
-        flash("Utilizador criado com sucesso!")
-        return redirect(url_for("dashboard"))
+        flash("User criado com sucesso!")
+        return redirect(url_for("users_listar"))
 
     # Se for GET, mostra o formulário
-    return render_template("criar_utilizador.html")
-
+    return render_template("criar_user.html")
 
 # ============================================================
-# CRIAR CLIENTE (ADMIN E STAFF)
+# ROTA PARA CRIAR CLIENTE (admin e staff)
 # ============================================================
 @app.route("/criar_cliente", methods=["GET", "POST"])
 def criar_cliente():
 
-    # Apenas admin e staff podem criar clientes
+    # Apenas admin e staff podem aceder
     if "user_id" not in session or session.get("role") not in ["admin", "staff"]:
-        flash("Acesso negado.")
+        flash("Acesso restrito.")
         return redirect(url_for("dashboard"))
 
-    # Se o formulário foi enviado
     if request.method == "POST":
+
+        # Dados básicos do cliente
         nome = request.form["nome"]
         email = request.form["email"]
-        telefone = request.form["telefone"]
 
-        # Liga ao banco
+        # Campos opcionais
+        telefone = request.form.get("telefone")   # pode ser None
+        morada = request.form.get("morada")       # pode ser None
+
+        # Checkbox para criar login
+        criar_login = request.form.get("criar_login")
+
         conexao = ligar_db()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(dictionary=True)
 
-        # Insere o novo cliente
-        cursor.execute(
-            "INSERT INTO clientes (nome, email, telefone) VALUES (%s, %s, %s)",
-            (nome, email, telefone)
-        )
+        # Se o admin/staff marcou "criar login", cria também o user
+        if criar_login:
+            username = request.form["username"]
+            password = request.form["password"]
+
+            cursor.execute("""
+                INSERT INTO users (username, password, role)
+                VALUES (%s, %s, 'cliente')
+            """, (username, password))
+
+            user_id = cursor.lastrowid  # ID do user criado
+        else:
+            user_id = None  # cliente sem login
+
+        # Cria o cliente com todos os campos (incluindo opcionais)
+        cursor.execute("""
+            INSERT INTO clientes (nome, telefone, email, morada, user_id)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (nome, telefone, email, morada, user_id))
 
         conexao.commit()
         cursor.close()
         conexao.close()
 
         flash("Cliente criado com sucesso!")
+        return redirect(url_for("clientes_listar"))
+
+    # Se for GET, mostra o formulário
+    return render_template("criar_cliente.html")
+
+# ============================================================
+# CRIAR ANIMAL (admin, staff, cliente)
+# ============================================================
+@app.route("/criar_animal", methods=["GET", "POST"])
+def criar_animal():
+
+    # Precisa estar logado
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    role = session.get("role")
+
+    conexao = ligar_db()
+    cursor = conexao.cursor(dictionary=True)
+
+    # Admin e staff podem escolher o cliente
+    if role in ["admin", "staff"]:
+        cursor.execute("SELECT id, nome FROM clientes ORDER BY nome")
+        clientes = cursor.fetchall()
+    else:
+        clientes = None  # cliente não escolhe cliente_id
+
+    if request.method == "POST":
+        nome = request.form["nome"]
+        especie = request.form["especie"]
+        raca = request.form["raca"]
+        data_nascimento = request.form["data_nascimento"]
+
+        # Determinar o cliente_id
+        if role in ["admin", "staff"]:
+            cliente_id = request.form["cliente_id"]
+        else:
+            cliente_id = session.get("cliente_id")  # agora funciona!
+
+        # Inserir animal
+        cursor.execute("""
+            INSERT INTO animais (nome, especie, raca, data_nascimento, cliente_id)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (nome, especie, raca, data_nascimento, cliente_id))
+
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+
+        flash("Animal criado com sucesso!")
         return redirect(url_for("dashboard"))
 
-    #mostra o formulário
-    return render_template("criar_cliente.html")
+    cursor.close()
+    conexao.close()
+
+    return render_template("criar_animal.html", clientes=clientes)
+
+# ============================================================
+# CRIAR CONSULTA (admin, staff, cliente)
+# ============================================================
+@app.route("/criar_consulta", methods=["GET", "POST"])
+def criar_consulta():
+
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    role = session.get("role")
+
+    conexao = ligar_db()
+    cursor = conexao.cursor(dictionary=True)
+
+    # Valores padrão
+    cliente_selecionado = None
+    animais = []
+
+    # ADMIN / STAFF → podem escolher cliente
+    if role in ["admin", "staff"]:
+        cursor.execute("SELECT id, nome FROM clientes ORDER BY nome")
+        clientes = cursor.fetchall()
+    else:
+        clientes = None
+
+    # CLIENTE → só vê os seus animais
+    if role == "cliente":
+        cursor.execute("SELECT id, nome FROM animais WHERE cliente_id = %s", (session.get("cliente_id"),))
+        animais = cursor.fetchall()
+
+    # ============================
+    # PROCESSAR POST
+    # ============================
+    if request.method == "POST":
+
+        # BOTÃO 1 → Selecionar cliente (POST parcial)
+        if "selecionar_cliente" in request.form:
+
+            cliente_selecionado = request.form.get("cliente_id")
+
+            # Carregar animais desse cliente
+            cursor.execute("SELECT id, nome FROM animais WHERE cliente_id = %s ORDER BY nome", (cliente_selecionado,))
+            animais = cursor.fetchall()
+
+            cursor.close()
+            conexao.close()
+
+            # Recarregar página com cliente selecionado e animais filtrados
+            return render_template(
+                "criar_consulta.html",
+                clientes=clientes,
+                animais=animais,
+                cliente_selecionado=cliente_selecionado
+            )
+
+        # BOTÃO 2 → Criar consulta (POST final)
+        elif "criar_consulta" in request.form:
+
+            animal_id = request.form["animal_id"]
+            data_hora = request.form["data_hora"]
+            motivo = request.form["motivo"]
+            notas = request.form["notas"]
+
+            # Determinar cliente_id
+            if role in ["admin", "staff"]:
+                cliente_id = request.form["cliente_id"]
+            else:
+                cliente_id = session.get("cliente_id")
+
+            cursor.execute("""
+                INSERT INTO consultas (animal_id, cliente_id, data_hora, motivo, notas)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (animal_id, cliente_id, data_hora, motivo, notas))
+
+            conexao.commit()
+            cursor.close()
+            conexao.close()
+
+            flash("Consulta criada com sucesso!")
+            return redirect(url_for("dashboard"))
+
+    cursor.close()
+    conexao.close()
+
+    return render_template(
+        "criar_consulta.html",
+        clientes=clientes,
+        animais=animais,
+        cliente_selecionado=cliente_selecionado
+    )
+
 # ============================================================
 # ROTA PARA EDITAR CLIENTE (ADMIN E STAFF)
 # ============================================================
 @app.route("/cliente_editar/<int:id>", methods=["GET", "POST"])
 def editar_cliente(id):
 
-    # Verifica se o utilizador está logado
+    # Verifica login
     if "user_id" not in session:
         return redirect(url_for("login"))
 
-    # Apenas admin e staff podem editar clientes
+    # Apenas admin e staff podem editar
     if not (is_admin() or is_staff()):
         flash("Apenas administradores ou staff podem editar clientes.")
         return redirect(url_for("dashboard"))
 
-    # Conecta ao banco de dados
     conexao = ligar_db()
     cursor = conexao.cursor(dictionary=True)
 
-    # Se o formulário foi enviado (POST)
-    if request.method == "POST":
-        # Recebe os dados enviados pelo formulário
-        nome = request.form["nome"]
-        telefone = request.form["telefone"]
-        email = request.form["email"]
-        morada = request.form["morada"]
-
-        # Atualiza os dados do cliente no banco
-        cursor.execute("""
-            UPDATE clientes 
-            SET nome=%s, telefone=%s, email=%s, morada=%s
-            WHERE id=%s
-        """, (nome, telefone, email, morada, id))
-
-        # Salva as alterações
-        conexao.commit()
-
-        # Fecha cursor e conexão
-        cursor.close()
-        conexao.close()
-
-        # Mensagem de sucesso
-        flash("Cliente atualizado com sucesso!")
-
-        # Volta para a lista de clientes
-        return redirect(url_for("clientes_listar"))
-
-    # Se for GET, busca os dados do cliente para preencher o formulário
+    # Buscar cliente (GET)
     cursor.execute("SELECT * FROM clientes WHERE id=%s", (id,))
     cliente = cursor.fetchone()
 
-    # Fecha cursor e conexão
+    if not cliente:
+        cursor.close()
+        conexao.close()
+        flash("Cliente não encontrado.")
+        return redirect(url_for("clientes_listar"))
+
+    # Se for POST → tentar atualizar
+    if request.method == "POST":
+
+        try:
+            cursor.execute("""
+                UPDATE clientes
+                SET nome=%s, telefone=%s, email=%s, morada=%s
+                WHERE id=%s
+            """, (
+                request.form["nome"],
+                request.form["telefone"],
+                request.form["email"],
+                request.form["morada"],
+                id
+            ))
+
+            conexao.commit()
+
+            cursor.close()
+            conexao.close()
+
+            flash("Cliente atualizado com sucesso!")
+            return redirect(url_for("clientes_listar"))
+
+        except Exception:
+            flash("Erro ao atualizar cliente. Verifique os dados e tente novamente.")
+
+            cursor.close()
+            conexao.close()
+
+            # Recarrega formulário com os dados enviados
+            return render_template("editar_cliente.html", cliente=request.form)
+
+    # GET → mostrar formulário
     cursor.close()
     conexao.close()
-
-    # Envia os dados do cliente para o template
     return render_template("editar_cliente.html", cliente=cliente)
-
-
 
 # ============================================================
 # ROTA PARA APAGAR CLIENTE (APENAS ADMIN)
@@ -310,33 +502,6 @@ def minha_conta():
     # Envia os dados para o template
     return render_template("minha_conta.html", cliente=cliente)
 
-
-
-# ============================================================
-# ROTA PARA LISTAR TODOS OS ANIMAIS (ADMIN E STAFF)
-# ============================================================
-@app.route("/animais_listar")
-def animais_listar():
-
-    # Verifica se o utilizador está logado
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    
-    # Conecta ao banco
-    conexao = ligar_db()
-    cursor = conexao.cursor(dictionary=True)
-
-    # Busca todos os animais cadastrados
-    cursor.execute("SELECT * from animais")
-    animais = cursor.fetchall()
-
-    # Fecha cursor e conexão
-    cursor.close()
-    conexao.close()
-    
-    # Envia a lista de animais para o template
-    return render_template("animais_listar.html", animais=animais)
-
 # ============================
 # ROTA DE DASHBOARD
 # ============================
@@ -363,8 +528,6 @@ def dashboard():
         role=session.get("role")
     )
 
-
-
 # ============================
 # LISTAR CLIENTES
 # ============================
@@ -390,40 +553,11 @@ def clientes_listar():
     # Envia a lista de clientes para o template
     return render_template("clientes_listar.html", clientes=clientes)
 
-
-
-# ============================
-# LISTAR CONSULTAS
-# ============================
-@app.route("/consultas_listar")
-def consultas_listar():
-
-    # Verifica se o utilizador está logado
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    # Liga ao banco de dados
-    conexao = ligar_db()
-    cursor = conexao.cursor(dictionary=True)
-    
-    # Busca todas as consultas da tabela
-    cursor.execute("SELECT * FROM consultas")
-    consultas = cursor.fetchall()
-    
-    # Fecha cursor e conexão
-    cursor.close()
-    conexao.close()
-
-    # Envia a lista de consultas para o template
-    return render_template("consultas_listar.html", consultas=consultas)
-
-
-
 # ============================
 # LISTAR UTILIZADORES
 # ============================
-@app.route("/users_listar")
-def users_listar():
+@app.route("/utilizadores_listar")
+def utilizadores_listar():
 
     # Verifica se o utilizador está logado
     if "user_id" not in session:
@@ -435,78 +569,212 @@ def users_listar():
 
     # Busca todos os utilizadores com os campos principais
     cursor.execute("SELECT id, username, role, cliente_id, created_at FROM users")
-    users = cursor.fetchall()
+    utilizadores = cursor.fetchall()
 
     # Fecha cursor e conexão
     cursor.close()
     conexao.close()
 
     # Envia a lista de utilizadores para o template
-    return render_template("users_listar.html", users=users)
+    return render_template("utilizadores_listar.html", utilizadores=utilizadores)
 
-# Rota onde o cliente vê apenas os animais dele
-@app.route("/meus_animais")
-def meus_animais():
-
+# ============================
+# LISTAR ANIMAIS (por tipo de utilizador)
+# ============================
+@app.route("/animais_listar")
+def animais_listar():
     # Verifica se o utilizador está logado
     if "user_id" not in session:
         return redirect(url_for("login"))
-
-    # Apenas clientes podem aceder a esta página
-    if session.get("role") != "cliente":
-        flash("Acesso negado. Apenas clientes podem ver esta página.")
-        return redirect(url_for("dashboard"))
 
     # Conectar ao banco de dados
     conexao = ligar_db()
     cursor = conexao.cursor(dictionary=True)
 
-    # Buscar todos os animais que pertencem ao cliente logado
-    # O cliente_id está guardado na sessão quando ele faz login
-    cursor.execute("SELECT * FROM animais WHERE cliente_id = %s", (session.get("cliente_id"),))
+    # ADMIN: vê todos os animais
+    if session.get("role") == "admin":
+        cursor.execute("""
+            SELECT animais.id, animais.nome, animais.especie, animais.raca, animais.data_nascimento,
+                   clientes.nome AS dono
+            FROM animais
+            LEFT JOIN clientes ON animais.cliente_id = clientes.id
+            ORDER BY animais.nome
+        """)
+
+    # STAFF: vê todos os animais (sem poder apagar no template)
+    elif session.get("role") == "staff":
+        cursor.execute("""
+            SELECT animais.id, animais.nome, animais.especie, animais.raca, animais.data_nascimento,
+                   clientes.nome AS dono
+            FROM animais
+            LEFT JOIN clientes ON animais.cliente_id = clientes.id
+            ORDER BY animais.nome
+        """)
+
+    # CLIENTE: vê apenas os seus próprios animais
+    elif session.get("role") == "cliente":
+        cursor.execute("""
+            SELECT id, nome, especie, raca, idade
+            FROM animais
+            WHERE cliente_id = %s
+            ORDER BY nome
+        """, (session.get("cliente_id"),))
+
+    else:
+        flash("Acesso negado.")
+        return redirect(url_for("dashboard"))
+
     animais = cursor.fetchall()
 
-    # Fechar cursor e conexão
+    # Fechar conexão
     cursor.close()
     conexao.close()
 
-    # Enviar os animais encontrados para o template meus_animais.html
-    return render_template("meus_animais.html", animais=animais)
+    # Enviar os dados para o template
+    return render_template("animais_listar.html", animais=animais)
 
-
-
-# Rota onde o cliente vê apenas as consultas dos seus animais
-@app.route("/minhas_consultas")
-def minhas_consultas():
-
+# ============================
+# LISTAR CONSULTAS (por tipo de utilizador)
+# ============================
+@app.route("/consultas_listar")
+def consultas_listar():
     # Verifica se o utilizador está logado
     if "user_id" not in session:
         return redirect(url_for("login"))
-
-    # Apenas clientes podem aceder a esta página
-    if session.get("role") != "cliente":
-        flash("Acesso negado. Apenas clientes podem ver esta página.")
-        return redirect(url_for("dashboard"))
 
     # Conectar ao banco de dados
     conexao = ligar_db()
     cursor = conexao.cursor(dictionary=True)
 
-    # ⚠️ Aqui ainda falta a query para buscar as consultas
-    # Você ainda vai completar esta parte depois
-    cursor.execute("")
+    # ADMIN e STAFF: veem todas as consultas
+    if session.get("role") in ["admin", "staff"]:
+        cursor.execute("""
+            SELECT 
+                consultas.id,
+                clientes.nome AS cliente,
+                animais.nome AS animal,
+                consultas.data_hora,
+                consultas.motivo,
+                consultas.notas,
+                consultas.created_at
+            FROM consultas
+            INNER JOIN animais ON consultas.animal_id = animais.id
+            INNER JOIN clientes ON animais.cliente_id = clientes.id
+            ORDER BY consultas.data_hora DESC
+        """)
 
-    # Buscar resultados da consulta
+    # CLIENTE: vê apenas as consultas dos seus próprios animais
+    elif session.get("role") == "cliente":
+        cursor.execute("""
+            SELECT
+                consultas.id,
+                animais.nome AS animal,
+                consultas.data_hora,
+                consultas.motivo,
+                consultas.notas,
+                consultas.created_at
+            FROM consultas
+            INNER JOIN animais ON consultas.animal_id = animais.id
+            WHERE animais.cliente_id = %s
+            ORDER BY consultas.data_hora DESC
+        """, (session.get("cliente_id"),))
+
+    else:
+        flash("Acesso negado.")
+        return redirect(url_for("dashboard"))
+
     consultas = cursor.fetchall()
 
     # Fechar cursor e conexão
     cursor.close()
     conexao.close()
 
-    # Enviar as consultas encontradas para o template minhas_consultas.html
-    return render_template("minhas_consultas.html", consultas=consultas)
+    # Enviar as consultas para o template
+    return render_template("consultas_listar.html", consultas=consultas)
 
+# ============================
+# MEUS ANIMAIS (CLIENTE)
+# ============================
+@app.route("/meus_animais")
+def meus_animais():
+    # Verifica se o utilizador está logado
+    if "user_id" not in session:
+        return redirect(url_for("login"))
 
+    # Apenas clientes podem aceder
+    if session.get("role") != "cliente":
+        flash("Acesso negado. Apenas clientes podem ver esta página.")
+        return redirect(url_for("dashboard"))
+
+    # Conectar ao banco de dados
+    conexao = ligar_db()
+    cursor = conexao.cursor(dictionary=True)
+
+    # Buscar apenas os animais do cliente logado
+    cursor.execute("""
+        SELECT id, nome, especie, raca, data_nascimento
+        FROM animais
+        WHERE cliente_id = %s
+        ORDER BY nome
+    """, (session.get("cliente_id"),))
+
+    animais = cursor.fetchall()
+
+    # Fechar conexão
+    cursor.close()
+    conexao.close()
+
+    # Enviar os dados para o template
+    return render_template("meus_animais.html", animais=animais)
+
+# ============================================================
+# VINCULAR O CLIENTE AO UTILIZADOR 
+# ============================================================
+@app.route("/vincular_cliente_utilizador", methods=["GET", "POST"])
+def vincular_cliente_utilizador():
+    # Apenas admin pode fazer essa operação
+    if session.get("role") != "admin":
+        flash("Acesso restrito.")
+        return redirect(url_for("dashboard"))
+
+    conexao = ligar_db()
+    cursor = conexao.cursor(dictionary=True)
+
+    if request.method == "POST":
+        # Recebe os IDs selecionados no formulário
+        cliente_id = request.form["cliente_id"]
+        utilizador_id = request.form["utilizador_id"]
+
+        # Atualiza o cliente para vincular ao utilizador
+        cursor.execute("""
+            UPDATE clientes SET utilizador_id = %s WHERE id = %s
+        """, (utilizador_id, cliente_id))
+
+        conexao.commit()
+        flash("Cliente vinculado ao utilizador com sucesso.")
+        return redirect(url_for("dashboard"))
+
+    # Busca utilizadores com role 'cliente' que ainda não têm cliente vinculado
+    cursor.execute("""
+        SELECT id, username FROM utilizadores
+        WHERE role = 'cliente' AND id NOT IN (
+            SELECT utilizador_id FROM clientes WHERE utilizador_id IS NOT NULL
+        )
+    """)
+    utilizadores = cursor.fetchall()
+
+    # Busca clientes que ainda não têm utilizador vinculado
+    cursor.execute("""
+        SELECT id, nome FROM clientes
+        WHERE utilizador_id IS NULL
+    """)
+    clientes = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    # Mostra o formulário com as listas de opções
+    return render_template("vincular_cliente_utilizador.html", utilizadores=utilizadores, clientes=clientes)
 
 # ============================================================
 # ROTA DE LOGOUT

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Criar User{% endblock %}
+
+{% block content %}
+<h2>Criar User</h2>
+
+<!-- Formulário para criar um novo user -->
+<form method="POST">
+
+  <!-- Username usado para login -->
+  <label>Username:</label>
+  <input type="text" name="username" required><br>
+
+  <!-- Password usada para login -->
+  <label>Password:</label>
+  <input type="password" name="password" required><br>
+
+  <!-- Tipo de user: define permissões no sistema -->
+  <label>Role:</label>
+  <select name="role" required>
+    <option value="admin">Admin</option>
+    <option value="staff">Staff</option>
+    <option value="cliente">Cliente</option>
+  </select><br>
+
+  <!-- Dados adicionais (sempre visíveis) -->
+  <label>Nome:</label>
+  <input type="text" name="nome" required><br>
+
+  <label>Email:</label>
+  <input type="email" name="email" required><br>
+
+  <!-- Botão para submeter o formulário -->
+  <button type="submit">Criar</button>
+
+</form>
+{% endblock %}

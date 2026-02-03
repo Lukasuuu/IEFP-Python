@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Meus Animais{% endblock %}
+
 {% block content %}
 <h1>Meus Animais</h1>
+
+{% if animais %}
 <table border="1" cellpadding="5">
   <tr>
     <th>ID</th>
@@ -20,4 +23,7 @@
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<p>Você ainda não tem animais cadastrados.</p>
+{% endif %}
 {% endblock %}

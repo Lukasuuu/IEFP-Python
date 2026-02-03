@@ -4,24 +4,46 @@
 {% block content %}
 <h1>Lista de Consultas</h1>
 
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Animal ID</th>
-    <th>Data/Hora</th>
-    <th>Motivo</th>
-    <th>Notas</th>
-    <th>Criado em</th>
-  </tr>
-  {% for consulta in consultas %}
-  <tr>
-    <td>{{ consulta.id }}</td>
-    <td>{{ consulta.animal_id }}</td>
-    <td>{{ consulta.data_hora }}</td>
-    <td>{{ consulta.motivo }}</td>
-    <td>{{ consulta.notas }}</td>
-    <td>{{ consulta.created_at }}</td>
-  </tr>
-  {% endfor %}
+<table border="1" cellpadding="5">
+
+    <thead>
+        <tr>
+            <th>ID da Consulta</th>
+            <th>Nome do Dono</th>
+            <th>Nome do Animal</th>
+            <th>Data de Agendamento</th>
+            <th>Motivo</th>
+            <th>Notas</th>
+            <th>Data de Criação</th>
+            {% if session.get("role") in ["admin", "staff"] %}
+            <th>Ações</th>
+            {% endif %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for consulta in consultas %}
+        <tr>
+            <td>{{ consulta.id }}</td>
+            <td>{{ consulta.cliente }}</td>
+            <td>{{ consulta.animal }}</td>
+            <td>{{ consulta.data_hora }}</td>
+            <td>{{ consulta.motivo }}</td>
+            <td>{{ consulta.notas }}</td>
+            <td>{{ consulta.created_at }}</td>
+
+            {% if session.get("role") in ["admin", "staff"] %}
+            <td>
+                <a href="{{ url_for('editar_consulta', id=consulta.id) }}">Editar</a>
+
+                {% if session.get("role") == "admin" %}
+                <a href="{{ url_for('apagar_consulta', id=consulta.id) }}">Apagar</a>
+                {% endif %}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+
 </table>
 {% endblock %}

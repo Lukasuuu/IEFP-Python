@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Criar Consulta{% endblock %}
+
+{% block content %}
+<h1>Criar Consulta</h1>
+
+<form method="POST">
+
+  {% if session.get("role") in ["admin", "staff"] %}
+
+    <!-- Selecionar cliente -->
+    <label for="cliente_id">Cliente:</label><br>
+    <select name="cliente_id" required>
+      <option value="">-- Selecione um cliente --</option>
+
+      {% for cliente in clientes %}
+        <option value="{{ cliente.id }}"
+          {% if cliente_selecionado and cliente_selecionado == cliente.id|string %}
+            selected
+          {% endif %}
+        >
+          {{ cliente.nome }}
+        </option>
+      {% endfor %}
+    </select>
+    <br><br>
+
+    <!-- Botão Selecionar Cliente aparece sempre que há um cliente escolhido -->
+    {% if cliente_selecionado %}
+      <button type="submit" name="selecionar_cliente">Selecionar cliente</button>
+      <br><br>
+    {% endif %}
+
+  {% endif %}
+
+  <!-- Selecionar animal -->
+  <label for="animal_id">Animal:</label><br>
+
+  <select name="animal_id" required>
+    {% if not cliente_selecionado and session.get("role") in ["admin", "staff"] %}
+      <option value="">-- Primeiro selecione um cliente --</option>
+
+    {% else %}
+      <option value="">-- Selecione um animal --</option>
+      {% for animal in animais %}
+        <option value="{{ animal.id }}">{{ animal.nome }}</option>
+      {% endfor %}
+    {% endif %}
+  </select>
+  <br><br>
+
+  <!-- Data e hora -->
+  <label for="data_hora">Data e Hora:</label><br>
+  <input type="datetime-local" name="data_hora" required><br><br>
+
+  <!-- Motivo -->
+  <label for="motivo">Motivo:</label><br>
+  <input type="text" name="motivo" required><br><br>
+
+  <!-- Notas -->
+  <label for="notas">Notas:</label><br>
+  <textarea name="notas"></textarea><br><br>
+
+  <!-- Botão final -->
+  <button type="submit" name="criar_consulta">Criar Consulta</button>
+
+</form>
+{% endblock %}

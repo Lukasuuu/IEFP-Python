@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Vincular Cliente a Utilizador{% endblock %}
+
+{% block content %}
+<h1>Vincular Cliente a Utilizador</h1>
+
+<form method="POST">
+  <!-- Seleciona cliente sem utilizador -->
+  <label>Cliente:</label><br>
+  <select name="cliente_id" required>
+    <option value="">-- Selecione o cliente --</option>
+    {% for cliente in clientes %}
+      <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <!-- Seleciona utilizador sem cliente -->
+  <label>Utilizador:</label><br>
+  <select name="utilizador_id" required>
+    <option value="">-- Selecione o utilizador --</option>
+    {% for utilizador in utilizadores %}
+      <option value="{{ utilizador.id }}">{{ utilizador.username }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <button type="submit">Vincular</button>
+</form>
+{% endblock %}

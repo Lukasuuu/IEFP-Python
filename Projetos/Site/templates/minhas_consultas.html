@@ -1,23 +1,36 @@
 {% extends "base.html" %}
 {% block title %}Minhas Consultas{% endblock %}
+
 {% block content %}
 <h1>Minhas Consultas</h1>
+
+{% if consultas %}
 <table border="1" cellpadding="5">
-  <tr>
-    <th>ID</th>
-    <th>Animal</th>
-    <th>Data/Hora</th>
-    <th>Motivo</th>
-    <th>Notas</th>
-  </tr>
-  {% for consulta in consultas %}
-  <tr>
-    <td>{{ consulta.id }}</td>
-    <td>{{ consulta.animal_nome }}</td>
-    <td>{{ consulta.data_hora }}</td>
-    <td>{{ consulta.motivo }}</td>
-    <td>{{ consulta.notas }}</td>
-  </tr>
-  {% endfor %}
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Animal</th>
+      <th>Data/Hora</th>
+      <th>Motivo</th>
+      <th>Notas</th>
+      <th>Data de Criação</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for consulta in consultas %}
+    <tr>
+      <td>{{ consulta.id }}</td>
+      <td>{{ consulta.animal }}</td>
+      <td>{{ consulta.data_hora }}</td>
+      <td>{{ consulta.motivo }}</td>
+      <td>{{ consulta.notas }}</td>
+      <td>{{ consulta.created_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
+{% else %}
+<p>Você ainda não tem consultas agendadas.</p>
+{% endif %}
+
 {% endblock %}

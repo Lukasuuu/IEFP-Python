@@ -1,12 +1,42 @@
 {% extends "base.html" %}
 {% block title %}Criar Cliente{% endblock %}
+
 {% block content %}
 <h2>Criar Cliente</h2>
+
+<!-- Formulário para criar um novo cliente -->
 <form method="POST">
-  <label>Nome:</label><input type="text" name="nome"><br>
-  <label>Email:</label><input type="email" name="email"><br>
-  <label>Telefone:</label><input type="text" name="telefone"><br>
-  <label>Morada:</label><input type="text" name="morada"><br>
+
+  <!-- Nome completo do cliente -->
+  <label>Nome:</label>
+  <input type="text" name="nome" required><br>
+
+  <!-- Email do cliente -->
+  <label>Email:</label>
+  <input type="email" name="email" required><br>
+
+  <!-- Telefone do cliente -->
+  <label>Telefone:</label>
+  <input type="text" name="telefone"><br>
+
+  <!-- Morada do cliente -->
+  <label>Morada:</label>
+  <input type="text" name="morada"><br>
+
+  <!-- Criar login para o cliente -->
+  <label>Criar login para este cliente?</label>
+  <input type="checkbox" name="criar_login" value="1"><br>
+
+  <!-- Username para login (sempre visível) -->
+  <label>Username:</label>
+  <input type="text" name="username"><br>
+
+  <!-- Password para login (sempre visível) -->
+  <label>Password:</label>
+  <input type="password" name="password"><br>
+
+  <!-- Botão para submeter o formulário -->
   <button type="submit">Criar</button>
+
 </form>
 {% endblock %}
