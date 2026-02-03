@@ -437,40 +437,190 @@ def editar_cliente(id):
     conexao.close()
     return render_template("editar_cliente.html", cliente=cliente)
 
+
 # ============================================================
 # ROTA PARA APAGAR CLIENTE (APENAS ADMIN)
 # ============================================================
-@app.route("/apagar/<int:id>")
+@app.route("/apagar_cliente/<int:id>", methods=["GET", "POST"])
 def apagar_cliente(id):
 
     # Verifica se o utilizador está logado
     if "user_id" not in session:
         return redirect(url_for("login"))
 
-    # Apenas administradores podem apagar clientes
+    # Apenas administradores podem apagar registos
     if not is_admin():
         flash("Apenas administradores podem apagar registos.")
         return redirect(url_for("dashboard"))
 
-    # Conecta ao banco
-    conexao = ligar_db()
-    cursor = conexao.cursor()
+    # Se o método for POST, significa que o admin confirmou o apagamento
+    if request.method == "POST":
+        try:
+            # Liga ao banco de dados
+            conexao = ligar_db()
+            cursor = conexao.cursor()
 
-    # Apaga o cliente pelo ID
-    cursor.execute("DELETE FROM clientes WHERE id=%s", (id,))
-    conexao.commit()
+            # Tenta apagar o cliente pelo ID
+            cursor.execute("DELETE FROM clientes WHERE id=%s", (id,))
+            conexao.commit()
 
-    # Fecha cursor e conexão
-    cursor.close()
-    conexao.close()
+            # Fecha a ligação ao banco
+            cursor.close()
+            conexao.close()
 
-    # Mensagem de sucesso
-    flash("Cliente apagado com sucesso!")
+            # Mensagem de sucesso
+            flash("Cliente apagado com sucesso!")
 
-    # Volta para a lista de clientes
-    return redirect(url_for("clientes_listar"))
+            # Volta para a lista de clientes
+            return redirect(url_for("clientes_listar"))
 
+        except Exception:
+            # Se der qualquer erro, mostra mensagem simples
+            flash("Erro ao apagar cliente.")
 
+            # Volta para a lista de clientes
+            return redirect(url_for("clientes_listar"))
+
+    # Se for GET, mostra a página de confirmação
+    return render_template("apagar.html", voltar=url_for("clientes_listar"))
+
+# ============================================================
+# ROTA PARA APAGAR ANIMAIS (APENAS ADMIN)
+# ============================================================
+@app.route("/apagar_animal/<int:id>", methods=["GET", "POST"])
+def apagar_animal(id):
+
+    # Verifica se o utilizador está logado
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    # Apenas administradores podem apagar registos
+    if not is_admin():
+        flash("Apenas administradores podem apagar registos.")
+        return redirect(url_for("dashboard"))
+
+    # Se o método for POST, significa que o admin confirmou o apagamento
+    if request.method == "POST":
+        try:
+            # Liga ao banco de dados
+            conexao = ligar_db()
+            cursor = conexao.cursor()
+
+            # Tenta apagar o animal pelo ID
+            cursor.execute("DELETE FROM animais WHERE id=%s", (id,))
+            conexao.commit()
+
+            # Fecha a ligação ao banco
+            cursor.close()
+            conexao.close()
+
+            # Mensagem de sucesso
+            flash("Animal apagado com sucesso!")
+
+            # Volta para a lista de animais
+            return redirect(url_for("animais_listar"))
+
+        except Exception:
+            # Se der qualquer erro, mostra mensagem simples
+            flash("Erro ao apagar animal.")
+
+            # Volta para a lista de animais
+            return redirect(url_for("animais_listar"))
+
+    # Se for GET, mostra a página de confirmação
+    return render_template("apagar.html", voltar=url_for("animais_listar"))
+
+# ============================================================
+# ROTA PARA APAGAR CONSULTAS (APENAS ADMIN)
+# ============================================================
+@app.route("/apagar_consulta/<int:id>", methods=["GET", "POST"])
+def apagar_consulta(id):
+
+    # Verifica se o utilizador está logado
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    # Apenas administradores podem apagar registos
+    if not is_admin():
+        flash("Apenas administradores podem apagar registos.")
+        return redirect(url_for("dashboard"))
+
+    # Se o método for POST, significa que o admin confirmou o apagamento
+    if request.method == "POST":
+        try:
+            # Liga ao banco de dados
+            conexao = ligar_db()
+            cursor = conexao.cursor()
+
+            # Tenta apagar a consulta pelo ID
+            cursor.execute("DELETE FROM consultas WHERE id=%s", (id,))
+            conexao.commit()
+
+            # Fecha a ligação ao banco
+            cursor.close()
+            conexao.close()
+
+            # Mensagem de sucesso
+            flash("Consulta apagada com sucesso!")
+
+            # Volta para a lista de consultas
+            return redirect(url_for("consultas_listar"))
+
+        except Exception:
+            # Se der qualquer erro, mostra mensagem simples
+            flash("Erro ao apagar consulta.")
+
+            # Volta para a lista de consultas
+            return redirect(url_for("consultas_listar"))
+
+    # Se for GET, mostra a página de confirmação
+    return render_template("apagar.html", voltar=url_for("consultas_listar"))
+
+# ============================================================
+# ROTA PARA APAGAR UTILIZADORES (APENAS ADMIN)
+# ============================================================
+@app.route("/apagar_user/<int:id>", methods=["GET", "POST"])
+def apagar_user(id):
+
+    # Verifica se o utilizador está logado
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    # Apenas administradores podem apagar users
+    if not is_admin():
+        flash("Apenas administradores podem apagar users.")
+        return redirect(url_for("dashboard"))
+
+    # Se o método for POST, significa que o admin confirmou o apagamento
+    if request.method == "POST":
+        try:
+            # Liga ao banco de dados
+            conexao = ligar_db()
+            cursor = conexao.cursor()
+
+            # Tenta apagar o user pelo ID
+            cursor.execute("DELETE FROM users WHERE id=%s", (id,))
+            conexao.commit()
+
+            # Fecha a ligação ao banco
+            cursor.close()
+            conexao.close()
+
+            # Mensagem de sucesso
+            flash("User apagado com sucesso!")
+
+            # Volta para a lista de users
+            return redirect(url_for("users_listar"))
+
+        except Exception:
+            # Se der qualquer erro, mostra mensagem simples
+            flash("Erro ao apagar user.")
+
+            # Volta para a lista de users
+            return redirect(url_for("users_listar"))
+
+    # Se for GET, mostra a página de confirmação
+    return render_template("apagar.html", voltar=url_for("users_listar"))
 
 # ============================================================
 # ROTA MINHA CONTA (APENAS CLIENTE)
@@ -554,29 +704,36 @@ def clientes_listar():
     return render_template("clientes_listar.html", clientes=clientes)
 
 # ============================
-# LISTAR UTILIZADORES
+# LISTAR USERS (APENAS ADMIN)
 # ============================
-@app.route("/utilizadores_listar")
-def utilizadores_listar():
+@app.route("/users_listar")
+def users_listar():
 
     # Verifica se o utilizador está logado
     if "user_id" not in session:
         return redirect(url_for("login"))
 
+    # Apenas administradores podem ver esta página
+    if session.get("role") != "admin":
+        flash("Apenas administradores podem ver a lista de users.")
+        return redirect(url_for("dashboard"))
+
     # Liga ao banco de dados
     conexao = ligar_db()
     cursor = conexao.cursor(dictionary=True)
 
-    # Busca todos os utilizadores com os campos principais
-    cursor.execute("SELECT id, username, role, cliente_id, created_at FROM users")
-    utilizadores = cursor.fetchall()
+    # Busca todos os users com os campos principais
+    cursor.execute("SELECT id, username, role, created_at FROM users")
+    users = cursor.fetchall()
 
     # Fecha cursor e conexão
     cursor.close()
     conexao.close()
 
-    # Envia a lista de utilizadores para o template
-    return render_template("utilizadores_listar.html", utilizadores=utilizadores)
+    # Envia a lista de users para o template
+    return render_template("users_listar.html", users=users)
+
+''''XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'''
 
 # ============================
 # LISTAR ANIMAIS (por tipo de utilizador)
