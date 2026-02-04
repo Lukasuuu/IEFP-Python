@@ -437,6 +437,61 @@ def editar_cliente(id):
     conexao.close()
     return render_template("editar_cliente.html", cliente=cliente)
 
+# ============================================================
+# ROTA PARA EDITAR CONSULTA (APENAS ADMIN)
+# ============================================================
+@app.route("/editar_consulta/<int:id>", methods=["GET", "POST"])
+def editar_consulta(id):
+
+    # Verifica se o utilizador está logado
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    # Apenas administradores podem editar consultas
+    if not is_admin():
+        flash("Apenas administradores podem editar registos.")
+        return redirect(url_for("dashboard"))
+
+    # Conecta ao banco
+    conexao = ligar_db()
+    cursor = conexao.cursor(dictionary=True)
+
+    # ============================
+    # POST → Atualizar consulta
+    # ============================
+    if request.method == "POST":
+
+        data_hora = request.form["data_hora"]
+        motivo = request.form["motivo"]
+        notas = request.form["notas"]
+
+        cursor.execute("""
+            UPDATE consultas
+            SET data_hora=%s, motivo=%s, notas=%s
+            WHERE id=%s
+        """, (data_hora, motivo, notas, id))
+
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+
+        flash("Consulta atualizada com sucesso!")
+        return redirect(url_for("editar_consultas"))
+
+    # ============================
+    # GET → Carregar dados da consulta
+    # ============================
+    cursor.execute("SELECT * FROM consultas WHERE id=%s", (id,))
+    consulta = cursor.fetchone()
+
+    cursor.close()
+    conexao.close()
+
+    if not consulta:
+        flash("Consulta não encontrada.")
+        return redirect(url_for("editar_consultas"))
+
+    return render_template("editar_consulta.html", consulta=consulta)
 
 # ============================================================
 # ROTA PARA APAGAR CLIENTE (APENAS ADMIN)
@@ -733,7 +788,6 @@ def users_listar():
     # Envia a lista de users para o template
     return render_template("users_listar.html", users=users)
 
-''''XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'''
 
 # ============================
 # LISTAR ANIMAIS (por tipo de utilizador)

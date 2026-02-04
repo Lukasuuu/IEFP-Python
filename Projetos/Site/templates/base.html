@@ -23,7 +23,7 @@
     <a href="{{ url_for('criar_animal') }}">Criar Novo Animal</a>
     <a href="{{ url_for('criar_consulta') }}">Criar Nova Consulta</a>
     {% if session.get("role") == "admin" %}
-      <a href="{{ url_for('vincular_cliente_utilizador') }}">Vincular Cliente a Utilizador</a>
+      <a href="">Vincular Cliente a Utilizador</a>
     {% endif %}
   {% endif %}
 
