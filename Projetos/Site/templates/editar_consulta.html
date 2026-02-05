@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Editar Consulta{% endblock %}
+
+{% block content %}
+<h1>Editar Consulta</h1>
+
+<div class="form-container">
+<form method="POST">
+
+    <label>Cliente:</label>
+    <select name="cliente_id" class="form-control" disabled>
+        {% for c in clientes %}
+            <option value="{{ c.id }}" {% if c.id == consulta.cliente_id %}selected{% endif %}>
+                {{ c.nome }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Animal:</label>
+    <select name="animal_id" class="form-control" required>
+        {% for a in animais %}
+            <option value="{{ a.id }}" {% if a.id == consulta.animal_id %}selected{% endif %}>
+                {{ a.nome }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Data e Hora:</label>
+    <input type="datetime-local" name="data_hora" class="form-control"
+           value="{{ consulta.data_hora|replace(' ', 'T') }}" required>
+
+    <label>Motivo:</label>
+    <input type="text" name="motivo" class="form-control" value="{{ consulta.motivo }}" required>
+
+    <label>Notas:</label>
+    <textarea name="notas" class="form-control">{{ consulta.notas }}</textarea>
+
+    <button type="submit" class="btn-sm-custom mt-3">Salvar Alterações</button>
+
+</form>
+</div>
+
+{% endblock %}

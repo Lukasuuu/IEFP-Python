@@ -1,39 +1,59 @@
 {% extends "base.html" %}
+<!-- Extende o layout base para herdar cabeçalho/rodapé/estilos -->
 {% block title %}Criar Animal{% endblock %}
-
+<!-- Define o título da página que aparece no browser -->
 {% block content %}
-<h1>Criar Animal</h1>
+<!-- Início do bloco de conteúdo principal -->
+<h2>Criar Animal</h2>
+<!-- Título visível na página -->
 
 <form method="POST">
+<!-- Formulário que envia via POST para a mesma rota -->
 
-  <!-- Nome do animal -->
-  <label for="nome">Nome:</label><br>
-  <input type="text" name="nome" required><br><br>
+<label>Nome do Animal:</label>
+<!-- Rótulo para o campo nome do animal -->
+<input type="text" name="nome" required>
+<!-- Campo de texto para nome (obrigatório) -->
 
-  <!-- Espécie -->
-  <label for="especie">Espécie:</label><br>
-  <input type="text" name="especie" required><br><br>
+<label>Espécie:</label>
+<!-- Rótulo para o campo espécie -->
+<input type="text" name="especie" required>
+<!-- Campo de texto para espécie (obrigatório) -->
 
-  <!-- Raça -->
-  <label for="raca">Raça:</label><br>
-  <input type="text" name="raca" required><br><br>
+<label>Raça:</label>
+<!-- Rótulo para o campo raça -->
+<input type="text" name="raca">
+<!-- Campo de texto para raça (opcional) -->
 
-  <!-- Data de nascimento -->
-  <label for="data_nascimento">Data de Nascimento:</label><br>
-  <input type="date" name="data_nascimento" required><br><br>
+<label>Data de Nascimento:</label>
+<!-- Rótulo para o campo data de nascimento -->
+<input type="date" name="data_nascimento">
+<!-- Campo de data para nascimento (opcional) -->
 
-  <!-- Admin e staff escolhem o cliente -->
-  {% if session.get("role") in ["admin", "staff"] %}
-    <label for="cliente_id">Cliente:</label><br>
-    <select name="cliente_id" required>
-      <option value="">-- Selecione o cliente --</option>
-      {% for cliente in clientes %}
-        <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
-      {% endfor %}
-    </select><br><br>
-  {% endif %}
+{% if clientes is defined and clientes %}
+<!-- Verifica se a variável 'clientes' foi passada pelo backend -->
+<label>Cliente (dono):</label>
+<!-- Rótulo para o select de clientes -->
+<select name="cliente_id" required>
+<!-- Select para escolher o cliente dono (obrigatório para admin/staff) -->
+  <option value="">-- Selecionar --</option>
+  <!-- Opção vazia inicial -->
+  {% for c in clientes %}
+  <!-- Loop para listar cada cliente disponível -->
+  <option value="{{ c.id }}">{{ c.nome }}</option>
+  <!-- Opção com id e nome do cliente -->
+  {% endfor %}
+  <!-- Fim do loop de clientes -->
+</select>
+<!-- Fecha o select -->
+{% endif %}
+<!-- Fim do bloco condicional que mostra clientes -->
 
-  <button type="submit">Salvar</button>
+<button type="submit">Criar Animal</button>
+<!-- Botão que submete o formulário -->
 
 </form>
+<!-- Fecha o formulário -->
+
 {% endblock %}
+<!-- Fecha o bloco content -->

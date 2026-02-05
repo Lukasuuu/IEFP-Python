@@ -2,23 +2,86 @@
 {% block title %}Lista de Utilizadores{% endblock %}
 
 {% block content %}
+<!-- Título da página -->
 <h1>Lista de Utilizadores</h1>
 
-<table border="1" cellpadding="5">
-  <tr>
-    <th>ID</th>
-    <th>Username</th>
-    <th>Role</th>
-    <th>Criado em</th>
-  </tr>
+<!-- Mostrar link para criar novo utilizador apenas para admin e staff -->
+{% if session.get("role") == "admin" or session.get("role") == "staff" %}
+<!-- Container para o link de criar utilizador -->
+<div class="nav-item">
+<!-- Link para criar novo utilizador com estilo pequeno -->
+<a class="nav-link btn-sm-custom" href="{{ url_for('criar_user') }}">Criar Novo Utilizador</a>
+</div>
+{% endif %}
 
-  {% for user in utilizadores %}
-  <tr>
-    <td>{{ user.id }}</td>
-    <td>{{ user.username }}</td>
-    <td>{{ user.role }}</td>
-    <td>{{ user.created_at }}</td>
-  </tr>
-  {% endfor %}
+<!-- Wrapper para scroll horizontal em ecrãs pequenos -->
+<div class="table-responsive-custom">
+<!-- Tabela simples para listar utilizadores -->
+<table>
+  <!-- Cabeçalho da tabela -->
+  <thead>
+    <tr>
+      <!-- Coluna: ID -->
+      <th>ID</th>
+      <!-- Coluna: Username -->
+      <th>Username</th>
+      <!-- Coluna: Role -->
+      <th>Role</th>
+      <!-- Coluna: Criado em -->
+      <th>Criado em</th>
+      <!-- Coluna: Ações -->
+      <th>Ações</th>
+    </tr>
+  </thead>
+
+  <!-- Corpo da tabela -->
+  <tbody>
+    <!-- Itera sobre a lista 'utilizadores' -->
+    {% for user in utilizadores %}
+    <tr>
+      <!-- Célula: ID do utilizador -->
+      <td>{{ user.id }}</td>
+      <!-- Célula: username -->
+      <td>{{ user.username }}</td>
+      <!-- Célula: role do utilizador -->
+      <td>{{ user.role }}</td>
+      <!-- Célula: created_at formatado quando possível -->
+      <td class="cell-muted">
+        {% if user.created_at %}
+        {% if user.created_at.strftime is defined %}
+        {{ user.created_at.strftime('%Y-%m-%d %H:%M') }}
+        {% else %}
+        {{ user.created_at }}
+        {% endif %}
+        {% else %}
+        -
+        {% endif %}
+      </td>
+      <!-- Célula: ações (editar / apagar) -->
+      <td class="action-links">
+        <!-- Editar visível para admin e staff -->
+        {% if session.get("role") in ["admin", "staff"] %}
+        <!-- Link para editar utilizador -->
+        <a href="{{ url_for('editar_user', id=user.id) }}" class="btn-sm-custom">Editar</a>
+        {% endif %}
+        <!-- Apagar visível apenas para admin -->
+        {% if session.get("role") == "admin" %}
+        <!-- Formulário POST para apagar utilizador com confirmação -->
+        <form method="post" action="{{ url_for('apagar_user', id=user.id) }}" style="display:inline;" onsubmit="return confirm('Tem a certeza que pretende apagar este utilizador?');">
+          <!-- Botão que submete o formulário -->
+          <button type="submit" class="btn-sm-custom danger">Apagar</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
+</div>
+
+<!-- Mensagem quando não há utilizadores -->
+{% if utilizadores|length == 0 %}
+<p>Nenhum utilizador encontrado.</p>
+{% endif %}
+
 {% endblock %}

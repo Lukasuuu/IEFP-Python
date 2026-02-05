@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Editar Utilizador{% endblock %}
+
+{% block content %}
+<h1>Editar Utilizador</h1>
+
+<div class="form-container">
+<form method="POST">
+
+    <label>Username:</label>
+    <input type="text" name="username" class="form-control" value="{{ user.username }}" required>
+
+    <label>Email:</label>
+    <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
+
+    <label>Papel:</label>
+    <select name="role" class="form-control">
+        <option value="admin"  {% if user.role == "admin" %}selected{% endif %}>Admin</option>
+        <option value="staff"  {% if user.role == "staff" %}selected{% endif %}>Staff</option>
+        <option value="cliente" {% if user.role == "cliente" %}selected{% endif %}>Cliente</option>
+    </select>
+
+    <label>Relacionar a um Cliente:</label>
+    <select name="cliente_id" class="form-control">
+        <option value="">-- Sem cliente associado --</option>
+
+        {% for c in clientes %}
+            <option value="{{ c.id }}"
+                {% if user.cliente_id == c.id %}selected{% endif %}>
+                {{ c.nome }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <p class="mt-2">
+        Se o cliente não existir, crie um novo cliente e depois volte para relacionar.
+    </p>
+
+    <button type="submit" class="btn-sm-custom mt-3">Salvar Alterações</button>
+
+</form>
+</div>
+
+<br>
+<a href="{{ url_for('users_listar') }}" class="btn-sm-custom">Voltar à lista</a>
+
+{% endblock %}

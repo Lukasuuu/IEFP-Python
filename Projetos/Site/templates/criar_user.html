@@ -1,37 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Criar User{% endblock %}
-
+<!-- Extende o layout base para herdar cabeçalho/rodapé/estilos -->
+{% block title %}Criar Utilizador{% endblock %}
+<!-- Define o título da página que aparece no browser -->
 {% block content %}
-<h2>Criar User</h2>
+<!-- Início do bloco de conteúdo principal -->
+<h2>Criar Utilizador</h2>
+<!-- Título visível na página -->
 
-<!-- Formulário para criar um novo user -->
 <form method="POST">
+<!-- Formulário que envia via POST para a mesma rota -->
 
-  <!-- Username usado para login -->
-  <label>Username:</label>
-  <input type="text" name="username" required><br>
+<label>Username:</label>
+<!-- Rótulo para o campo username -->
+<input type="text" name="username" required>
+<!-- Campo de texto para username (obrigatório) -->
 
-  <!-- Password usada para login -->
-  <label>Password:</label>
-  <input type="password" name="password" required><br>
+<label>Password:</label>
+<!-- Rótulo para o campo password -->
+<input type="password" name="password" required>
+<!-- Campo de password (obrigatório) -->
 
-  <!-- Dados adicionais (sempre visíveis) -->
-  <label>Nome:</label>
-  <input type="text" name="nome" required><br>
+<label>Role:</label>
+<!-- Rótulo para o campo role -->
+<select name="role" required>
+<!-- Select para escolher o papel do utilizador -->
+  <option value="admin">admin</option>
+  <!-- Opção admin -->
+  <option value="staff">staff</option>
+  <!-- Opção staff -->
+  <option value="cliente">cliente</option>
+  <!-- Opção cliente -->
+</select>
+<!-- Fecha o select do role -->
 
-  <label>Email:</label>
-  <input type="email" name="email" required><br>
+<label>Nome (opcional):</label>
+<!-- Rótulo para o nome (opcional) -->
+<input type="text" name="nome">
+<!-- Campo de texto para nome -->
 
-    <!-- Tipo de user: define permissões no sistema -->
-  <label>Role:</label>
-  <select name="role" required>
-    <option value="admin">Admin</option>
-    <option value="staff">Staff</option>
-    <option value="cliente">Cliente</option>
-  </select><br>
+<label>Email (opcional):</label>
+<!-- Rótulo para o email (opcional) -->
+<input type="email" name="email">
+<!-- Campo de email para contacto -->
 
-  <!-- Botão para submeter o formulário -->
-  <button type="submit">Criar</button>
+<button type="submit">Criar Utilizador</button>
+<!-- Botão que submete o formulário -->
 
 </form>
+<!-- Fecha o formulário -->
+
 {% endblock %}
+<!-- Fecha o bloco content -->

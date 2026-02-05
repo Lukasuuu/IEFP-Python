@@ -4,42 +4,51 @@
 {% block content %}
 <h1>Lista de Animais</h1>
 
-{% if animais %}
-<table border="1" cellpadding="5">
-  <tr>
-    <th>ID</th>
-    <th>Cliente</th>
-    <th>Espécie</th>
-    <th>Raça</th>
-    <th>Data de Nascimento</th>
-    <th>Criado em</th>
-    <th>Ações</th>
-  </tr>
+<div class="table-responsive-custom">
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Espécie</th>
+            <th>Raça</th>
+            <th>Data de Nascimento</th>
+            <th>Criado em</th>
+            {% if session.role in ["admin", "staff"] %}
+            <th>Cliente</th>
+            {% endif %}
+            <th>Ações</th>
+        </tr>
+    </thead>
 
-  {% for animal in animais %}
-  <tr>
-    <td>{{ animal.id }}</td>
-    <td>{{ animal.nome }}</td>
-    <td>{{ animal.especie }}</td>
-    <td>{{ animal.raca }}</td>
-    <td>{{ animal.data_nascimento }}</td>
-    <td>{{ animal.created_at }}</td>
+    <tbody>
+        {% for a in animais %}
+        <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.nome }}</td>
+            <td>{{ a.especie }}</td>
+            <td>{{ a.raca }}</td>
+            <td>{{ a.data_nascimento }}</td>
+            <td>{{ a.created_at }}</td>
 
-    <td>
-      {% if session.get("role") == "admin" or session.get("role") == "staff" %}
-        <a href="{{ url_for('editar_animal', id=animal.id) }}">Editar</a>
-      {% endif %}
+            {% if session.role in ["admin", "staff"] %}
+            <td>{{ a.cliente_nome or "—" }}</td>
+            {% endif %}
 
-      {% if session.get("role") == "admin" %}
-        <a href="{{ url_for('apagar_animal', id=animal.id) }}">Apagar</a>
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
+            <td class="action-links">
+                <a href="{{ url_for('editar_animal', id=a.id) }}" class="btn-sm-custom">Editar</a>
+
+                {% if session.role == "admin" %}
+                <form method="post" action="{{ url_for('apagar_animal', id=a.id) }}" style="display:inline;"
+                      onsubmit="return confirm('Tem certeza que deseja apagar este animal?');">
+                    <button type="submit" class="btn-sm-custom danger">Apagar</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
-
-{% else %}
-<p>Nenhum animal encontrado.</p>
-{% endif %}
+</div>
 
 {% endblock %}

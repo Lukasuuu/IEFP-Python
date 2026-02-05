@@ -1,41 +1,25 @@
 {% extends "base.html" %}
-{% block title %}Lista de Users{% endblock %}
-
+{% block title %}Dashboard{% endblock %}
 {% block content %}
 
-<!-- Título da página -->
-<h1>Lista de Users</h1>
+{% if not session.get("user_id") %}
+    <p><a href="{{ url_for('login') }}">Entrar</a></p>
 
-<!-- Tabela que mostra todos os users -->
-<table border="1" cellpadding="5">
+{% elif session.role == "admin" %}
+    <h1><ul>Bem-vindo, {{ session.username }}</ul></h1>
+    <h2><ul>Perfil: {{ session.role }}</ul></h2>
+    <p><ul>Permissões: pode ver/criar/editar/apagar users, clientes, animais e consultas.</ul></p>
 
-  <!-- Cabeçalho da tabela -->
-  <tr>
-    <th>ID</th>            <!-- ID do user -->
-    <th>Username</th>      <!-- Nome de login -->
-    <th>Role</th>          <!-- admin / staff / cliente -->
-    <th>Criado em</th>     <!-- Data de criação -->
-    <th>Ações</th>         <!-- Editar / Apagar -->
-  </tr>
+{% elif session.role == "staff" %}
+    <h1>Bem-vindo, {{ session.username }}</h1>
+    <h2>Perfil: {{ session.role }}</h2>
+    <p>Permissões: pode ver/criar/editar clientes, animais e consultas. Não pode apagar.</p>
 
-  <!-- Loop que percorre todos os users enviados pela rota -->
-  {% for user in users %}
-  <tr>
+{% elif session.role == "cliente" %}
+    <h1>Bem-vindo, {{ session.username }}</h1>
+    <h2>Perfil: {{ session.role }}</h2>
+    <p>Permissões: pode ver os seus dados pessoais, os seus animais e as suas consultas.</p>
 
-    <!-- Dados do user -->
-    <td>{{ user.id }}</td>
-    <td>{{ user.username }}</td>
-    <td>{{ user.role }}</td>
-    <td>{{ user.created_at }}</td>
-
-    <!-- Ações disponíveis apenas para administradores -->
-    <td>
-      <a href="{{ url_for('editar_user', id=user.id) }}">Editar</a>
-      <a href="{{ url_for('apagar_user', id=user.id) }}">Apagar</a>
-    </td>
-
-  </tr>
-  {% endfor %}
-</table>
+{% endif %}
 
 {% endblock %}

@@ -4,65 +4,40 @@
 {% block content %}
 <h1>Criar Consulta</h1>
 
+<div class="form-container">
 <form method="POST">
 
-  {% if session.get("role") in ["admin", "staff"] %}
-
-    <!-- Selecionar cliente -->
-    <label for="cliente_id">Cliente:</label><br>
-    <select name="cliente_id" required>
-      <option value="">-- Selecione um cliente --</option>
-
-      {% for cliente in clientes %}
-        <option value="{{ cliente.id }}"
-          {% if cliente_selecionado and cliente_selecionado == cliente.id|string %}
-            selected
-          {% endif %}
-        >
-          {{ cliente.nome }}
-        </option>
-      {% endfor %}
+    <label>Cliente:</label>
+    <select name="cliente_id" class="form-control" onchange="this.form.submit()">
+        <option value="">-- Selecionar Cliente --</option>
+        {% for c in clientes %}
+            <option value="{{ c.id }}"
+                {% if request.form.cliente_id == c.id|string %}selected{% endif %}>
+                {{ c.nome }}
+            </option>
+        {% endfor %}
     </select>
-    <br><br>
 
-    <!-- Botão Selecionar Cliente aparece sempre que há um cliente escolhido -->
-    {% if cliente_selecionado %}
-      <button type="submit" name="selecionar_cliente">Selecionar cliente</button>
-      <br><br>
-    {% endif %}
+    <label>Animal:</label>
+    <select name="animal_id" class="form-control" required>
+        <option value="">-- Selecionar Animal --</option>
+        {% for a in animais %}
+            <option value="{{ a.id }}">{{ a.nome }}</option>
+        {% endfor %}
+    </select>
 
-  {% endif %}
+    <label>Data e Hora:</label>
+    <input type="datetime-local" name="data_hora" class="form-control" required>
 
-  <!-- Selecionar animal -->
-  <label for="animal_id">Animal:</label><br>
+    <label>Motivo:</label>
+    <input type="text" name="motivo" class="form-control" required>
 
-  <select name="animal_id" required>
-    {% if not cliente_selecionado and session.get("role") in ["admin", "staff"] %}
-      <option value="">-- Primeiro selecione um cliente --</option>
+    <label>Notas:</label>
+    <textarea name="notas" class="form-control"></textarea>
 
-    {% else %}
-      <option value="">-- Selecione um animal --</option>
-      {% for animal in animais %}
-        <option value="{{ animal.id }}">{{ animal.nome }}</option>
-      {% endfor %}
-    {% endif %}
-  </select>
-  <br><br>
-
-  <!-- Data e hora -->
-  <label for="data_hora">Data e Hora:</label><br>
-  <input type="datetime-local" name="data_hora" required><br><br>
-
-  <!-- Motivo -->
-  <label for="motivo">Motivo:</label><br>
-  <input type="text" name="motivo" required><br><br>
-
-  <!-- Notas -->
-  <label for="notas">Notas:</label><br>
-  <textarea name="notas"></textarea><br><br>
-
-  <!-- Botão final -->
-  <button type="submit" name="criar_consulta">Criar Consulta</button>
+    <button type="submit" class="btn-sm-custom mt-3">Criar Consulta</button>
 
 </form>
+</div>
+
 {% endblock %}

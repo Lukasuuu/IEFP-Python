@@ -4,24 +4,34 @@
 {% block content %}
 <h1>Editar Cliente</h1>
 
+<div class="form-container">
 <form method="POST">
 
-    <label>Nome:</label><br>
-    <input type="text" name="nome" value="{{ cliente.nome }}" required><br><br>
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" class="form-control" value="{{ cliente.nome }}" required>
 
-    <label>Telefone:</label><br>
-    <input type="text" name="telefone" value="{{ cliente.telefone }}"><br><br>
+    <label for="telefone">Telefone:</label>
+    <input type="text" id="telefone" name="telefone" class="form-control" value="{{ cliente.telefone }}">
 
-    <label>Email:</label><br>
-    <input type="email" name="email" value="{{ cliente.email }}"><br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" class="form-control" value="{{ cliente.email }}">
 
-    <label>Morada:</label><br>
-    <input type="text" name="morada" value="{{ cliente.morada }}"><br><br>
+    <label for="morada">Morada:</label>
+    <input type="text" id="morada" name="morada" class="form-control" value="{{ cliente.morada }}">
 
-    <button type="submit">Guardar Alterações</button>
+    <button type="submit" class="btn-sm-custom mt-3">Guardar Alterações</button>
 </form>
+</div>
 
 <br>
-<a href="{{ url_for('clientes_listar') }}">Voltar à lista</a>
+
+<!-- Botão Criar Login -->
+<a href="{{ url_for('criar_user') }}?cliente_id={{ cliente.id }}" class="btn-sm-custom">
+    Criar Login para este Cliente
+</a>
+
+<br><br>
+
+<a href="{{ url_for('clientes_listar') }}" class="btn-sm-custom">Voltar à lista</a>
 
 {% endblock %}
