@@ -65,7 +65,6 @@ def index():
         role=session.get("role")
     )
 
-
 ## ============================================================
 # ROTA DE LOGIN
 # ============================================================
@@ -208,8 +207,6 @@ def criar_user():                                                 # função que
         conexao.close()                                           # fecha a ligação
 
     return redirect(url_for("users_listar"))                      # redireciona para a lista de utilizadores
-
-
 
 # ============================================================
 # ROTA PARA CRIAR CLIENTE (ADMIN E STAFF)
