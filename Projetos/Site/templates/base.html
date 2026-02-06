@@ -72,6 +72,11 @@
       color: #e9f7f2;
       padding: 28px 0;
       margin-top: 28px;
+      bottom: 0;
+      left: 0;
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
     }
 
     footer a { color: #cfeee0; text-decoration: none; }
@@ -265,9 +270,22 @@
         <div class="col-md-3">
           <h6 class="mb-1">Links</h6>
           <ul class="list-unstyled small mb-0">
-            <li><a href="{{ url_for('clientes_listar') }}">Clientes</a></li>
-            <li><a href="{{ url_for('animais_listar') }}">Animais</a></li>
-            <li><a href="{{ url_for('consultas_listar') }}">Consultas</a></li>
+            {% if session.get("user_id") %}
+            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+
+            {% if session.get("role") in ["admin", "staff"] %}
+              <li><a href="{{ url_for('clientes_listar') }}">Clientes</a></li>
+              <li><a href="{{ url_for('animais_listar') }}">Animais</a></li>
+              <li><a href="{{ url_for('consultas_listar') }}">Consultas</a></li>
+              <li><a href="{{ url_for('users_listar') }}">Utilizadores</a></li>
+            {% endif %}
+
+            {% if session.get("role") == "cliente" %}
+              <li><a href="{{ url_for('minha_conta') }}">Minha Conta</a></li>
+              <li><a href="{{ url_for('meus_animais') }}">Meus Animais</a></li>
+              <li><a href="{{ url_for('minhas_consultas') }}">Minhas Consultas</a></li>
+            {% endif %}
+          {% endif %}
           </ul>
         </div>
 
@@ -277,13 +295,11 @@
           <p class="small mb-0">Desenvolvido por Equipa</p>
         </div>
       </div>
+    </div>
 
-      <!-- Linha legal pequena -->
-      <div class="row mt-3">
-        <div class="col-12">
-          <small class="text-muted">Informação para gestão interna. Consulte a política de privacidade.</small>
-        </div>
-      </div>
+    <!-- Linha legal pequena -->
+    <div class="" align="center">
+      <small class="text-muted">Informação para gestão interna. Consulte a política de privacidade.</small>
     </div>
   </footer>
 
