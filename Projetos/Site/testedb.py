@@ -15,17 +15,19 @@ def ligar_db():
 
 def testar_db():
     try:
-        conn = ligar_db()
-        cursor = conn.cursor()
+        conexao = ligar_db()
+        cursor = conexao.cursor()
         cursor.execute("SELECT * from animais")
         resultado = cursor.fetchall()
-
-        print("Conexão bem-sucedida! Resultado:", resultado)
-
+        
         cursor.close()
-        conn.close()
+        conexao.close()
+        print("Conexão bem-sucedida! Resultado:", resultado)
+        
     except mysql.connector.Error as erro:
         print("Erro ao conectar ao MySQL:", erro)
+  
+     
 
 if __name__ == "__main__":
     testar_db()
