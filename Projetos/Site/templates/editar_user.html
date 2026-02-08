@@ -1,47 +1,58 @@
 {% extends "base.html" %}
+
 {% block title %}Editar Utilizador{% endblock %}
 
 {% block content %}
-<h1>Editar Utilizador</h1>
 
-<div class="form-container">
+<h1 class="mb-4">Editar Utilizador</h1>
+
 <form method="POST">
 
-    <label>Username:</label>
-    <input type="text" name="username" class="form-control" value="{{ user.username }}" required>
+    <input type="hidden" name="acao" value="salvar">
 
-    <label>Email:</label>
-    <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
+    <div class="mb-3">
+        <label class="form-label">Username (email ou nome)</label>
+        <input type="text" name="username" class="form-control"
+               value="{{ user.username }}" required>
+    </div>
 
-    <label>Papel:</label>
-    <select name="role" class="form-control">
-        <option value="admin"  {% if user.role == "admin" %}selected{% endif %}>Admin</option>
-        <option value="staff"  {% if user.role == "staff" %}selected{% endif %}>Staff</option>
-        <option value="cliente" {% if user.role == "cliente" %}selected{% endif %}>Cliente</option>
-    </select>
+    <!-- Apenas administradores podem alterar a password -->
+    {% if admin() %}
+    <div class="mb-3">
+        <label class="form-label">Nova Password (opcional)</label>
+        <input type="password" name="password" class="form-control">
+    </div>
+    {% endif %}
 
-    <label>Relacionar a um Cliente:</label>
-    <select name="cliente_id" class="form-control">
-        <option value="">-- Sem cliente associado --</option>
+    <div class="mb-3">
+        <label class="form-label">Papel</label>
+        <select name="role" class="form-control" required>
+            <option value="admin"   {% if user.role == 'admin' %}selected{% endif %}>Administrador</option>
+            <option value="staff"   {% if user.role == 'staff' %}selected{% endif %}>Staff</option>
+            <option value="cliente" {% if user.role == 'cliente' %}selected{% endif %}>Cliente</option>
+        </select>
+    </div>
 
-        {% for c in clientes %}
-            <option value="{{ c.id }}"
-                {% if user.cliente_id == c.id %}selected{% endif %}>
-                {{ c.nome }}
-            </option>
-        {% endfor %}
-    </select>
+    <div class="mb-3">
+        <label class="form-label">Cliente associado</label>
+        <select name="cliente_id" class="form-control">
+            <option value="">-- Sem cliente associado --</option>
 
-    <p class="mt-2">
-        Se o cliente não existir, crie um novo cliente e depois volte para relacionar.
-    </p>
+            {% for c in clientes %}
+                <option value="{{ c.id }}"
+                    {% if user.cliente_id == c.id %}selected{% endif %}>
+                    {{ c.nome }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
 
-    <button type="submit" class="btn-sm-custom mt-3">Salvar Alterações</button>
+    <button type="submit" class="btn btn-primary mt-3">Guardar Alterações</button>
 
 </form>
-</div>
 
-<br>
-<a href="{{ url_for('users_listar') }}" class="btn-sm-custom">Voltar à lista</a>
+<a href="{{ url_for('users_listar') }}" class="btn btn-outline-secondary mt-3">
+    Voltar à lista
+</a>
 
 {% endblock %}

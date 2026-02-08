@@ -1,53 +1,51 @@
 {% extends "base.html" %}
-<!-- Extende o layout base para herdar cabeçalho/rodapé/estilos -->
+
 {% block title %}Criar Utilizador{% endblock %}
-<!-- Define o título da página que aparece no browser -->
+
 {% block content %}
-<!-- Início do bloco de conteúdo principal -->
-<h2>Criar Utilizador</h2>
-<!-- Título visível na página -->
+
+<h1 class="mb-4">Criar Utilizador</h1>
 
 <form method="POST">
-<!-- Formulário que envia via POST para a mesma rota -->
 
-<label>Username:</label>
-<!-- Rótulo para o campo username -->
-<input type="text" name="username" required>
-<!-- Campo de texto para username (obrigatório) -->
+    <input type="hidden" name="acao" value="salvar">
 
-<label>Password:</label>
-<!-- Rótulo para o campo password -->
-<input type="password" name="password" required>
-<!-- Campo de password (obrigatório) -->
+    <div class="mb-3">
+        <label class="form-label">Username (email ou nome)</label>
+        <input type="text" name="username" class="form-control" required>
+    </div>
 
-<label>Role:</label>
-<!-- Rótulo para o campo role -->
-<select name="role" required>
-<!-- Select para escolher o papel do utilizador -->
-  <option value="admin">admin</option>
-  <!-- Opção admin -->
-  <option value="staff">staff</option>
-  <!-- Opção staff -->
-  <option value="cliente">cliente</option>
-  <!-- Opção cliente -->
-</select>
-<!-- Fecha o select do role -->
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
 
-<label>Nome (opcional):</label>
-<!-- Rótulo para o nome (opcional) -->
-<input type="text" name="nome">
-<!-- Campo de texto para nome -->
+    <div class="mb-3">
+        <label class="form-label">Papel</label>
+        <select name="role" class="form-control" required>
+            <option value="admin">Administrador</option>
+            <option value="staff">Staff</option>
+            <option value="cliente">Cliente</option>
+        </select>
+    </div>
 
-<label>Email (opcional):</label>
-<!-- Rótulo para o email (opcional) -->
-<input type="email" name="email">
-<!-- Campo de email para contacto -->
+    <div class="mb-3">
+        <label class="form-label">Cliente associado</label>
+        <select name="cliente_id" class="form-control">
+            <option value="">-- Sem cliente associado --</option>
 
-<button type="submit">Criar Utilizador</button>
-<!-- Botão que submete o formulário -->
+            {% for c in clientes %}
+                <option value="{{ c.id }}">{{ c.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Criar Utilizador</button>
 
 </form>
-<!-- Fecha o formulário -->
+
+<a href="{{ url_for('users_listar') }}" class="btn btn-outline-secondary mt-3">
+    Voltar à lista
+</a>
 
 {% endblock %}
-<!-- Fecha o bloco content -->

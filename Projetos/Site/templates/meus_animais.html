@@ -2,28 +2,49 @@
 {% block title %}Meus Animais{% endblock %}
 
 {% block content %}
-<h1>Meus Animais</h1>
 
-{% if animais %}
-<table border="1" cellpadding="5">
-  <tr>
-    <th>ID</th>
-    <th>Nome</th>
-    <th>Espécie</th>
-    <th>Raça</th>
-    <th>Data de Nascimento</th>
-  </tr>
-  {% for animal in animais %}
-  <tr>
-    <td>{{ animal.id }}</td>
-    <td>{{ animal.nome }}</td>
-    <td>{{ animal.especie }}</td>
-    <td>{{ animal.raca }}</td>
-    <td>{{ animal.data_nascimento }}</td>
-  </tr>
-  {% endfor %}
-</table>
-{% else %}
-<p>Você ainda não tem animais cadastrados.</p>
-{% endif %}
+<!--
+  MEUS ANIMAIS (apenas cliente) - 
+  Lista todos os animais do cliente autenticado
+-->
+
+<div class="pagina-meus-animais">
+
+    <h1>Meus Animais</h1>
+
+    <!-- Se existem animais cadastrados -->
+    {% if animais %}
+
+        <!-- Tabela estilizada via estilos.css -->
+        <table class="tabela-listagem">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Espécie</th>
+                    <th>Raça</th>
+                    <th>Data de Nascimento</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for animal in animais %}
+                <tr>
+                    <td>{{ animal.nome }}</td>
+                    <td>{{ animal.especie }}</td>
+                    <td>{{ animal.raca }}</td>
+                    <td>{{ animal.data_nascimento }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+
+        <!-- Caso o cliente não tenha animais cadastrados -->
+        <p>Você ainda não tem animais cadastrados.</p>
+
+    {% endif %}
+
+</div>
+
 {% endblock %}

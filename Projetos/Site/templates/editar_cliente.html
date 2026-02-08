@@ -1,37 +1,45 @@
 {% extends "base.html" %}
+
 {% block title %}Editar Cliente{% endblock %}
 
 {% block content %}
-<h1>Editar Cliente</h1>
 
-<div class="form-container">
+<h1 class="mb-4">Editar Cliente</h1>
+
 <form method="POST">
 
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" class="form-control" value="{{ cliente.nome }}" required>
+    <input type="hidden" name="acao" value="salvar">
 
-    <label for="telefone">Telefone:</label>
-    <input type="text" id="telefone" name="telefone" class="form-control" value="{{ cliente.telefone }}">
+    <div class="mb-3">
+        <label class="form-label">Nome</label>
+        <input type="text" name="nome" class="form-control"
+               value="{{ cliente.nome }}" required>
+    </div>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" class="form-control" value="{{ cliente.email }}">
+    <div class="mb-3">
+        <label class="form-label">Telefone</label>
+        <input type="text" name="telefone" class="form-control"
+               value="{{ cliente.telefone }}">
+    </div>
 
-    <label for="morada">Morada:</label>
-    <input type="text" id="morada" name="morada" class="form-control" value="{{ cliente.morada }}">
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control"
+               value="{{ cliente.email }}">
+    </div>
 
-    <button type="submit" class="btn-sm-custom mt-3">Guardar Alterações</button>
+    <div class="mb-3">
+        <label class="form-label">Morada</label>
+        <input type="text" name="morada" class="form-control"
+               value="{{ cliente.morada }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Guardar Alterações</button>
+
 </form>
-</div>
 
-<br>
-
-<!-- Botão Criar Login -->
-<a href="{{ url_for('criar_user') }}?cliente_id={{ cliente.id }}" class="btn-sm-custom">
-    Criar Login para este Cliente
+<a href="{{ url_for('clientes_listar') }}" class="btn btn-outline-secondary mt-3">
+    Voltar à lista
 </a>
-
-<br><br>
-
-<a href="{{ url_for('clientes_listar') }}" class="btn-sm-custom">Voltar à lista</a>
 
 {% endblock %}

@@ -2,35 +2,49 @@
 {% block title %}Minhas Consultas{% endblock %}
 
 {% block content %}
-<h1>Minhas Consultas</h1>
 
-{% if consultas %}
-<table border="1" cellpadding="5">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Animal</th>
-      <th>Data/Hora</th>
-      <th>Motivo</th>
-      <th>Notas</th>
-      <th>Data de Criação</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for consulta in consultas %}
-    <tr>
-      <td>{{ consulta.id }}</td>
-      <td>{{ consulta.animal }}</td>
-      <td>{{ consulta.data_hora }}</td>
-      <td>{{ consulta.motivo }}</td>
-      <td>{{ consulta.notas }}</td>
-      <td>{{ consulta.created_at }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>Você ainda não tem consultas agendadas.</p>
-{% endif %}
+<!-- 
+  MINHAS CONSULTAS (apenas cliente) -
+  Lista todas as consultas dos animais do cliente autenticado
+-->
+
+<div class="pagina-minhas-consultas">
+
+    <h1>Minhas Consultas</h1>
+
+    <!-- Se existem consultas cadastradas -->
+    {% if consultas %}
+
+        <!-- Tabela estilizada via estilos.css -->
+        <table class="tabela-listagem">
+            <thead>
+                <tr>
+                    <th>Animal</th>
+                    <th>Data/Hora</th>
+                    <th>Motivo</th>
+                    <th>Notas</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for consulta in consultas %}
+                <tr>
+                    <td>{{ consulta.animal }}</td>
+                    <td>{{ consulta.data_hora }}</td>
+                    <td>{{ consulta.motivo }}</td>
+                    <td>{{ consulta.notas }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+
+        <!-- Caso o cliente não tenha consultas -->
+        <p>Você ainda não tem consultas agendadas.</p>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}

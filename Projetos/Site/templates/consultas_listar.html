@@ -1,110 +1,64 @@
 {% extends "base.html" %}
+
 {% block title %}Lista de Consultas{% endblock %}
 
 {% block content %}
-<!-- Título da página -->
-<h1>Lista de Consultas</h1>
 
-<!-- Mostrar link para criar nova consulta apenas para admin e staff -->
-{% if session.get("role") == "admin" or session.get("role") == "staff" %}
-<!-- Container para o link de criar consulta -->
-<div class="nav-item">
-<!-- Link para criar nova consulta com estilo pequeno -->
-<a class="nav-link btn-sm-custom" href="{{ url_for('criar_consulta') }}">Criar Nova Consulta</a>
-</div>
+<h1 class="mb-4">Lista de Consultas</h1>
+
+<!-- Admin e staff podem criar consultas -->
+{% if admin() or staff() %}
+<a href="{{ url_for('criar_consulta') }}" class="btn btn-success mb-3">
+    Adicionar Nova Consulta
+</a>
 {% endif %}
 
-<!-- Wrapper para scroll horizontal em ecrãs pequenos -->
-<div class="table-responsive-custom">
-<!-- Tabela principal de consultas -->
-<table>
-  <!-- Cabeçalho da tabela -->
-  <thead>
-    <tr>
-      <!-- Coluna: ID da consulta -->
-      <th>ID da Consulta</th>
-      <!-- Coluna: Nome do dono (cliente) -->
-      <th>Nome do Dono</th>
-      <!-- Coluna: Nome do animal -->
-      <th>Nome do Animal</th>
-      <!-- Coluna: Data de agendamento -->
-      <th>Data de Agendamento</th>
-      <!-- Coluna: Motivo -->
-      <th>Motivo</th>
-      <!-- Coluna: Notas -->
-      <th>Notas</th>
-      <!-- Coluna: Data de criação -->
-      <th>Data de Criação</th>
-      <!-- Coluna: Ações (visível apenas para admin/staff) -->
-      {% if session.get("role") in ["admin", "staff"] %}
-      <th>Ações</th>
-      {% endif %}
-    </tr>
-  </thead>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Animal</th>
+            <th>Cliente</th>
+            <th>Data e Hora</th>
+            <th>Motivo</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
 
-  <!-- Corpo da tabela -->
-  <tbody>
-    <!-- Itera sobre a lista 'consultas' -->
-    {% for consulta in consultas %}
-    <tr>
-      <!-- Célula: id da consulta -->
-      <td>{{ consulta.id }}</td>
-      <!-- Célula: nome do cliente/dono -->
-      <td>{{ consulta.cliente or '-' }}</td>
-      <!-- Célula: nome do animal -->
-      <td>{{ consulta.animal or '-' }}</td>
-      <!-- Célula: data/hora agendada formatada quando possível -->
-      <td class="cell-muted">
-        {% if consulta.data_hora %}
-        {% if consulta.data_hora.strftime is defined %}
-        {{ consulta.data_hora.strftime('%Y-%m-%d %H:%M') }}
-        {% else %}
-        {{ consulta.data_hora }}
-        {% endif %}
-        {% else %}
-        -
-        {% endif %}
-      </td>
-      <!-- Célula: motivo da consulta -->
-      <td>{{ consulta.motivo or '-' }}</td>
-      <!-- Célula: notas da consulta -->
-      <td>{{ consulta.notas or '-' }}</td>
-      <!-- Célula: data de criação formatada quando possível -->
-      <td class="cell-muted">
-        {% if consulta.created_at %}
-        {% if consulta.created_at.strftime is defined %}
-        {{ consulta.created_at.strftime('%Y-%m-%d %H:%M') }}
-        {% else %}
-        {{ consulta.created_at }}
-        {% endif %}
-        {% else %}
-        -
-        {% endif %}
-      </td>
-      <!-- Célula: ações (editar / apagar) -->
-      {% if session.get("role") in ["admin", "staff"] %}
-      <td class="action-links">
-        <!-- Link para editar consulta -->
-        <a href="{{ url_for('editar_consulta', id=consulta.id) }}" class="btn-sm-custom">Editar</a>
-        <!-- Mostrar botão apagar apenas para admin -->
-        {% if session.get("role") == "admin" %}
-        <!-- Formulário POST para apagar consulta com confirmação -->
-        <form method="post" action="{{ url_for('apagar_consulta', id=consulta.id) }}" style="display:inline;" onsubmit="return confirm('Tem a certeza que pretende apagar esta consulta?');">
-          <!-- Botão que submete o formulário -->
-          <button type="submit" class="btn-sm-custom danger">Apagar</button>
-        </form>
-        {% endif %}
-      </td>
-      {% endif %}
-    </tr>
-    {% endfor %}
-  </tbody>
+    <tbody>
+        {% for c in consultas %}
+        <tr>
+
+            <td>{{ c.animal_nome }}</td>
+            <td>{{ c.cliente_nome }}</td>
+            <td>{{ c.data_hora }}</td>
+            <td>{{ c.motivo or '—' }}</td>
+
+            <td class="action-links">
+
+                <!-- Editar (admin e staff) -->
+                {% if admin() or staff() %}
+                <a href="{{ url_for('editar_consulta', id=c.id) }}" class="btn-sm-custom">
+                    Editar
+                </a>
+                {% endif %}
+
+                <!-- Apagar (apenas admin) -->
+                {% if admin() %}
+                <form method="POST"
+                      action="{{ url_for('apagar_consulta', id=c.id) }}"
+                      style="display:inline;"
+                      onsubmit="return confirm('Tem a certeza que pretende apagar esta consulta?');">
+
+                    <button type="submit" class="btn-sm-custom danger">
+                        Apagar
+                    </button>
+                </form>
+                {% endif %}
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
-</div>
-
-<!-- Mensagem quando não há consultas -->
-{% if consultas|length == 0 %}
-<p>Nenhuma consulta encontrada.</p>
-{% endif %}
 
 {% endblock %}

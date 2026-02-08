@@ -2,17 +2,38 @@
 {% block title %}Minha conta{% endblock %}
 
 {% block content %}
-  <h1>Minha conta</h1>
 
-  {% if cliente %}
-    <ul>
-      <li><strong>Nome:</strong> {{ cliente.nome }}</li>
-      <li><strong>Telefone:</strong> {{ cliente.telefone }}</li>
-      <li><strong>Email:</strong> {{ cliente.email }}</li>
-      <li><strong>Morada:</strong> {{ cliente.morada }}</li>
-      <li><strong>Cliente desde:</strong> {{ cliente.created_at }}</li>
-    </ul>
-  {% else %}
-    <p>Não foi possível carregar os seus dados.</p>
-  {% endif %}
+<!-- 
+  MINHA CONTA (apenas cliente) - 
+  Mostra os dados pessoais do cliente autenticado
+-->
+
+<div class="pagina-minha-conta">
+
+    <h1>Minha Conta</h1>
+
+    <!-- Se os dados do cliente foram carregados corretamente -->
+    {% if cliente %}
+
+        <!-- Secção com os dados pessoais -->
+        <div class="dados-cliente">
+
+            <!-- Cada linha representa um campo do cliente -->
+            <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+            <p><strong>Telefone:</strong> {{ cliente.telefone }}</p>
+            <p><strong>Email:</strong> {{ cliente.email }}</p>
+            <p><strong>Morada:</strong> {{ cliente.morada }}</p>
+            <p><strong>Cliente desde:</strong> {{ cliente.created_at }}</p>
+
+        </div>
+
+    {% else %}
+
+        <!-- Caso ocorra algum erro ao carregar os dados -->
+        <p>Não foi possível carregar os seus dados.</p>
+
+    {% endif %}
+
+</div>
+
 {% endblock %}

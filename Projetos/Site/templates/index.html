@@ -1,15 +1,37 @@
 {% extends "base.html" %}
-{% block title %}Animals - Clinica Veterinaria{% endblock %}
+{% block title %}Animals - Clínica Veterinária{% endblock %}
 
 {% block content %}
-  <h1>Bem-vindo a Animals</h1>
-  <p>Plataforma para gestão de clientes, animais e consultas.</p>
 
-  <!-- Se o utilizador não estiver autenticado, mostra link de entrada -->
-  {% if not session.get("user_id") %}
-    <!-- Usamos a classe btn-sm-custom definida no base.html para manter o estilo consistente -->
-    <p><a class="btn-sm-custom" href="{{ url_for('login') }}">Entrar</a></p>
-  {% else %}
+<!--
+  PÁGINA INICIAL -
+  Mostra mensagem de boas-vindas e opções conforme o tipo de utilizador
+-->
 
-  {% endif %}
+<h1>Bem-vindo à Animals</h1>
+<p>Plataforma para gestão de clientes, animais e consultas.</p>
+
+<!-- Caso o utilizador não esteja autenticado -->
+{% if not session.get("user_id") %}
+    <a class="btn btn-primary" href="{{ url_for('login') }}">Entrar</a>
+
+<!-- Caso esteja autenticado -->
+{% else %}
+
+    <!-- Mensagem para administrador -->
+    {% if admin() %}
+        <p>Bem-vindo, administrador. Tem acesso total ao sistema.</p>
+
+    <!-- Mensagem para staff -->
+    {% elif staff() %}
+        <p>Bem-vindo, membro da equipa, {{ session.username }}. Pode gerir clientes, animais e consultas.</p>
+
+    <!-- Mensagem para cliente -->
+    {% elif cliente() %}
+        <p>Bem-vindo à sua área, {{ session.username }}. Aqui pode ver os seus animais e consultas.</p>
+
+    {% endif %}
+
+{% endif %}
+
 {% endblock %}

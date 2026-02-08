@@ -1,43 +1,50 @@
 {% extends "base.html" %}
+
 {% block title %}Editar Consulta{% endblock %}
 
 {% block content %}
-<h1>Editar Consulta</h1>
 
-<div class="form-container">
+<h1 class="mb-4">Editar Consulta</h1>
+
 <form method="POST">
 
-    <label>Cliente:</label>
-    <select name="cliente_id" class="form-control" disabled>
-        {% for c in clientes %}
-            <option value="{{ c.id }}" {% if c.id == consulta.cliente_id %}selected{% endif %}>
-                {{ c.nome }}
-            </option>
-        {% endfor %}
-    </select>
+    <input type="hidden" name="acao" value="salvar">
 
-    <label>Animal:</label>
-    <select name="animal_id" class="form-control" required>
-        {% for a in animais %}
-            <option value="{{ a.id }}" {% if a.id == consulta.animal_id %}selected{% endif %}>
-                {{ a.nome }}
-            </option>
-        {% endfor %}
-    </select>
+    <div class="mb-3">
+        <label class="form-label">Animal</label>
+        <select name="animal_id" class="form-control" required>
+            {% for a in animais %}
+                <option value="{{ a.id }}"
+                    {% if consulta.animal_id == a.id %}selected{% endif %}>
+                    {{ a.nome }} ({{ a.cliente_nome }})
+                </option>
+            {% endfor %}
+        </select>
+    </div>
 
-    <label>Data e Hora:</label>
-    <input type="datetime-local" name="data_hora" class="form-control"
-           value="{{ consulta.data_hora|replace(' ', 'T') }}" required>
+    <div class="mb-3">
+        <label class="form-label">Data e Hora</label>
+        <input type="datetime-local" name="data_hora" class="form-control"
+               value="{{ consulta.data_hora|replace(' ', 'T') }}" required>
+    </div>
 
-    <label>Motivo:</label>
-    <input type="text" name="motivo" class="form-control" value="{{ consulta.motivo }}" required>
+    <div class="mb-3">
+        <label class="form-label">Motivo</label>
+        <input type="text" name="motivo" class="form-control"
+               value="{{ consulta.motivo }}">
+    </div>
 
-    <label>Notas:</label>
-    <textarea name="notas" class="form-control">{{ consulta.notas }}</textarea>
+    <div class="mb-3">
+        <label class="form-label">Notas</label>
+        <textarea name="notas" class="form-control" rows="4">{{ consulta.notas }}</textarea>
+    </div>
 
-    <button type="submit" class="btn-sm-custom mt-3">Salvar Alterações</button>
+    <button type="submit" class="btn btn-primary mt-3">Guardar Alterações</button>
 
 </form>
-</div>
+
+<a href="{{ url_for('consultas_listar') }}" class="btn btn-outline-secondary mt-3">
+    Voltar à lista
+</a>
 
 {% endblock %}

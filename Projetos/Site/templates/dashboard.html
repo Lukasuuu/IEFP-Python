@@ -1,25 +1,39 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
+
 {% block content %}
 
-{% if not session.get("user_id") %}
-    <p><a href="{{ url_for('login') }}">Entrar</a></p>
+<!-- 
+ DASHBOARD (Página principal) - 
+ Mostra informações básicas do utilizador autenticado
+-->
 
-{% elif session.role == "admin" %}
-    <h1><ul>Bem-vindo, {{ session.username }}</ul></h1>
-    <h2><ul>Perfil: {{ session.role }}</ul></h2>
-    <p><ul>Permissões: pode ver/criar/editar/apagar users, clientes, animais e consultas.</ul></p>
+<div class="dashboard-container">
 
-{% elif session.role == "staff" %}
-    <h1>Bem-vindo, {{ session.username }}</h1>
-    <h2>Perfil: {{ session.role }}</h2>
-    <p>Permissões: pode ver/criar/editar clientes, animais e consultas. Não pode apagar.</p>
+    <!-- Caso não exista sessão ativa, mostra link para login -->
+    {% if not session.get("user_id") %}
+        <p><a href="{{ url_for('login') }}">Entrar</a></p>
 
-{% elif session.role == "cliente" %}
-    <h1>Bem-vindo, {{ session.username }}</h1>
-    <h2>Perfil: {{ session.role }}</h2>
-    <p>Permissões: pode ver os seus dados pessoais, os seus animais e as suas consultas.</p>
+    <!-- Secção exclusiva para administradores -->
+    {% elif admin() %}
+        <h1>Bem-vindo, {{ session.username }}</h1>
+        <h2>Perfil: Administrador</h2>
+        <p>Permissões: pode ver, criar, editar e apagar utilizadores, clientes, animais e consultas.</p>
 
-{% endif %}
+    <!-- Secção exclusiva para staff -->
+    {% elif staff() %}
+        <h1>Bem-vindo, {{ session.username }}</h1>
+        <h2>Perfil: Staff</h2>
+        <p>Permissões: pode ver, criar e editar clientes, animais e consultas. Não pode apagar.</p>
+
+    <!-- Secção exclusiva para clientes -->
+    {% elif is_cliente() %}
+        <h1>Bem-vindo, {{ session.username }}</h1>
+        <h2>Perfil: Cliente</h2>
+        <p>Permissões: pode ver os seus dados pessoais, os seus animais e as suas consultas.</p>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}

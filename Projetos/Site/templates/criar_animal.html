@@ -1,59 +1,52 @@
 {% extends "base.html" %}
-<!-- Extende o layout base para herdar cabeçalho/rodapé/estilos -->
+
 {% block title %}Criar Animal{% endblock %}
-<!-- Define o título da página que aparece no browser -->
+
 {% block content %}
-<!-- Início do bloco de conteúdo principal -->
-<h2>Criar Animal</h2>
-<!-- Título visível na página -->
+
+<h1 class="mb-4">Criar Animal</h1>
 
 <form method="POST">
-<!-- Formulário que envia via POST para a mesma rota -->
 
-<label>Nome do Animal:</label>
-<!-- Rótulo para o campo nome do animal -->
-<input type="text" name="nome" required>
-<!-- Campo de texto para nome (obrigatório) -->
+    <input type="hidden" name="acao" value="salvar">
 
-<label>Espécie:</label>
-<!-- Rótulo para o campo espécie -->
-<input type="text" name="especie" required>
-<!-- Campo de texto para espécie (obrigatório) -->
+    <div class="mb-3">
+        <label class="form-label">Nome</label>
+        <input type="text" name="nome" class="form-control" required>
+    </div>
 
-<label>Raça:</label>
-<!-- Rótulo para o campo raça -->
-<input type="text" name="raca">
-<!-- Campo de texto para raça (opcional) -->
+    <div class="mb-3">
+        <label class="form-label">Espécie</label>
+        <input type="text" name="especie" class="form-control" required>
+    </div>
 
-<label>Data de Nascimento:</label>
-<!-- Rótulo para o campo data de nascimento -->
-<input type="date" name="data_nascimento">
-<!-- Campo de data para nascimento (opcional) -->
+    <div class="mb-3">
+        <label class="form-label">Raça</label>
+        <input type="text" name="raca" class="form-control">
+    </div>
 
-{% if clientes is defined and clientes %}
-<!-- Verifica se a variável 'clientes' foi passada pelo backend -->
-<label>Cliente (dono):</label>
-<!-- Rótulo para o select de clientes -->
-<select name="cliente_id" required>
-<!-- Select para escolher o cliente dono (obrigatório para admin/staff) -->
-  <option value="">-- Selecionar --</option>
-  <!-- Opção vazia inicial -->
-  {% for c in clientes %}
-  <!-- Loop para listar cada cliente disponível -->
-  <option value="{{ c.id }}">{{ c.nome }}</option>
-  <!-- Opção com id e nome do cliente -->
-  {% endfor %}
-  <!-- Fim do loop de clientes -->
-</select>
-<!-- Fecha o select -->
-{% endif %}
-<!-- Fim do bloco condicional que mostra clientes -->
+    <div class="mb-3">
+        <label class="form-label">Data de Nascimento</label>
+        <input type="date" name="data_nascimento" class="form-control">
+    </div>
 
-<button type="submit">Criar Animal</button>
-<!-- Botão que submete o formulário -->
+    <div class="mb-3">
+        <label class="form-label">Cliente</label>
+        <select name="cliente_id" class="form-control" required>
+            <option value="">-- Selecione um cliente --</option>
+
+            {% for c in clientes %}
+                <option value="{{ c.id }}">{{ c.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Criar Animal</button>
 
 </form>
-<!-- Fecha o formulário -->
+
+<a href="{{ url_for('animais_listar') }}" class="btn btn-outline-secondary mt-3">
+    Voltar à lista
+</a>
 
 {% endblock %}
-<!-- Fecha o bloco content -->

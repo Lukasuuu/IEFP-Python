@@ -1,74 +1,41 @@
 {% extends "base.html" %}
-<!-- Extende o layout base para herdar cabeçalho/rodapé/estilos -->
+
 {% block title %}Criar Cliente{% endblock %}
-<!-- Define o título da página que aparece no browser -->
+
 {% block content %}
-<!-- Início do bloco de conteúdo principal -->
-<h2>Criar Cliente</h2>
-<!-- Título visível na página -->
+
+<h1 class="mb-4">Criar Cliente</h1>
 
 <form method="POST">
-<!-- Formulário que envia via POST para a mesma rota -->
 
-<label>Nome:</label>
-<!-- Rótulo para o campo nome -->
-<input type="text" name="nome" required>
-<!-- Campo de texto para nome (obrigatório) -->
+    <input type="hidden" name="acao" value="salvar">
 
-<label>Email:</label>
-<!-- Rótulo para o campo email -->
-<input type="email" name="email" required>
-<!-- Campo de email (obrigatório) -->
+    <div class="mb-3">
+        <label class="form-label">Nome</label>
+        <input type="text" name="nome" class="form-control" required>
+    </div>
 
-<label>Telefone:</label>
-<!-- Rótulo para o campo telefone -->
-<input type="text" name="telefone">
-<!-- Campo de texto para telefone (opcional) -->
+    <div class="mb-3">
+        <label class="form-label">Telefone</label>
+        <input type="text" name="telefone" class="form-control">
+    </div>
 
-<label>Morada:</label>
-<!-- Rótulo para o campo morada -->
-<input type="text" name="morada">
-<!-- Campo de texto para morada (opcional) -->
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control">
+    </div>
 
-<label>Criar login para este cliente?</label>
-<!-- Rótulo para o checkbox que controla criação de login -->
-<input type="checkbox" name="criar_login" id="criar_login">
-<!-- Checkbox; quando marcado envia "on" -->
+    <div class="mb-3">
+        <label class="form-label">Morada</label>
+        <input type="text" name="morada" class="form-control">
+    </div>
 
-<div id="login_fields" style="display:none; margin-top:10px;">
-<!-- Container para os campos de login, escondido por padrão -->
-
-<label>Username:</label>
-<!-- Rótulo para o campo username do login -->
-<input type="text" name="username">
-<!-- Campo de texto para username (aparece só se checkbox marcado) -->
-
-<label>Password:</label>
-<!-- Rótulo para o campo password do login -->
-<input type="password" name="password">
-<!-- Campo de password (aparece só se checkbox marcado) -->
-
-</div>
-<!-- Fecha o container dos campos de login -->
-
-<button type="submit">Criar</button>
-<!-- Botão que submete o formulário -->
+    <button type="submit" class="btn btn-success mt-3">Criar Cliente</button>
 
 </form>
-<!-- Fecha o formulário -->
 
-<script>
-<!-- Início do script para mostrar/ocultar campos de login -->
-document.getElementById("criar_login").addEventListener("change", function() {
-<!-- Adiciona um listener que reage à mudança do checkbox -->
-    const campos = document.getElementById("login_fields");
-    <!-- Seleciona o container dos campos de login -->
-    campos.style.display = this.checked ? "block" : "none";
-    <!-- Mostra se marcado, esconde se desmarcado -->
-});
-<!-- Fecha a função do listener -->
-</script>
-<!-- Fecha o script -->
+<a href="{{ url_for('clientes_listar') }}" class="btn btn-outline-secondary mt-3">
+    Voltar à lista
+</a>
 
 {% endblock %}
-<!-- Fecha o bloco content -->

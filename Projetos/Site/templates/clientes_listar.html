@@ -1,95 +1,65 @@
 {% extends "base.html" %}
+
 {% block title %}Lista de Clientes{% endblock %}
 
 {% block content %}
-<!-- Título da página -->
-<h1>Lista de Clientes</h1>
 
-<!-- Verifica se o utilizador tem role admin ou staff para mostrar o link de criar -->
-{% if session.get("role") == "admin" or session.get("role") == "staff" %}
-<!-- Container para o link de criar cliente -->
-<div class="nav-item">
-<!-- Link para criar novo cliente com estilo pequeno definido no base.html -->
-<a class="nav-link btn-sm-custom" href="{{ url_for('criar_cliente') }}">Criar Novo Cliente</a>
-</div>
+<h1 class="mb-4">Lista de Clientes</h1>
+
+<!-- Apenas admin e staff podem criar clientes -->
+{% if admin() or staff() %}
+<a href="{{ url_for('criar_cliente') }}" class="btn btn-success mb-3">
+    Adicionar Novo Cliente
+</a>
 {% endif %}
 
-<!-- Wrapper que permite scroll horizontal em ecrãs pequenos -->
-<div class="table-responsive-custom">
-<!-- Início da tabela principal (estilos globais aplicados via base.html) -->
-<table>
-  <!-- Cabeçalho da tabela -->
-  <thead>
-    <tr>
-      <!-- Coluna: ID -->
-      <th>ID</th>
-      <!-- Coluna: Nome -->
-      <th>Nome</th>
-      <!-- Coluna: Telefone -->
-      <th>Telefone</th>
-      <!-- Coluna: Email -->
-      <th>Email</th>
-      <!-- Coluna: Morada -->
-      <th>Morada</th>
-      <!-- Coluna: Criado em -->
-      <th>Criado em</th>
-      <!-- Coluna: Ações -->
-      <th>Ações</th>
-    </tr>
-  </thead>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Morada</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
 
-  <!-- Corpo da tabela -->
-  <tbody>
-    <!-- Loop Jinja para iterar sobre a lista 'clientes' -->
-    {% for cliente in clientes %}
-    <tr>
-      <!-- Célula: ID do cliente -->
-      <td>{{ cliente.id }}</td>
-      <!-- Célula: Nome do cliente -->
-      <td>{{ cliente.nome }}</td>
-      <!-- Célula: Telefone do cliente (ou vazio) -->
-      <td>{{ cliente.telefone or '' }}</td>
-      <!-- Célula: Email do cliente (ou vazio) -->
-      <td>{{ cliente.email or '' }}</td>
-      <!-- Célula: Morada do cliente (ou vazio) -->
-      <td>{{ cliente.morada or '' }}</td>
-      <!-- Célula: Data de criação formatada quando possível -->
-      <td class="cell-muted">
-        {% if cliente.created_at %}
-        {% if cliente.created_at.strftime is defined %}
-        {{ cliente.created_at.strftime('%Y-%m-%d %H:%M') }}
-        {% else %}
-        {{ cliente.created_at }}
-        {% endif %}
-        {% else %}
-        -
-        {% endif %}
-      </td>
-      <!-- Célula: Ações (editar / apagar) -->
-      <td class="action-links">
-        <!-- Mostrar editar para admin e staff -->
-        {% if session.get("role") == "admin" or session.get("role") == "staff" %}
-        <!-- Link para editar cliente -->
-        <a href="{{ url_for('editar_cliente', id=cliente.id) }}" class="btn-sm-custom">Editar</a>
-        {% endif %}
-        <!-- Mostrar formulário de apagar apenas para admin -->
-        {% if session.get("role") == "admin" %}
-        <!-- Formulário POST para apagar cliente com confirmação no cliente -->
-        <form method="post" action="{{ url_for('apagar_cliente', id=cliente.id) }}" style="display:inline;" onsubmit="return confirm('Tem a certeza que pretende apagar este cliente?');">
-          <!-- Botão que submete o formulário e aciona a rota de apagar -->
-          <button type="submit" class="btn-sm-custom danger">Apagar</button>
-        </form>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
+    <tbody>
+        {% for c in clientes %}
+        <tr>
+
+            <!-- Mostra os dados do cliente -->
+            <td>{{ c.nome }}</td>
+            <td>{{ c.telefone or '—' }}</td>
+            <td>{{ c.email or '—' }}</td>
+            <td>{{ c.morada or '—' }}</td>
+
+            <td class="action-links">
+
+                <!-- Editar (admin e staff) -->
+                {% if admin() or staff() %}
+                <a href="{{ url_for('editar_cliente', id=c.id) }}" class="btn-sm-custom">
+                    Editar
+                </a>
+                {% endif %}
+
+                <!-- Apagar (apenas admin) -->
+                {% if admin() %}
+                <form method="POST"
+                      action="{{ url_for('apagar_cliente', id=c.id) }}"
+                      style="display:inline;"
+                      onsubmit="return confirm('Tem a certeza que pretende apagar este cliente?');">
+
+                    <button type="submit" class="btn-sm-custom danger">
+                        Apagar
+                    </button>
+                </form>
+                {% endif %}
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
-</div>
-
-<!-- Mensagem quando não há clientes -->
-{% if clientes|length == 0 %}
-<p>Nenhum cliente encontrado.</p>
-{% endif %}
 
 {% endblock %}
