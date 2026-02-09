@@ -114,18 +114,18 @@ def login():
 
         # LOGIN OK → limpa sessão antiga e cria nova
         session.clear()
-        session["user_id"] = user["id"]
-        session["role"] = user["role"]
-        session["username"] = user["username"]
+        session["user_id"] = user["id"]                                                          # type: ignore
+        session["role"] = user["role"]                                                           # type: ignore
+        session["username"] = user["username"]                                                   # type: ignore
 
         # Se o utilizador for cliente, deve ter cliente_id associado
-        if user["role"] == "cliente":
-            if not user["cliente_id"]:
+        if user["role"] == "cliente":                                                           # type: ignore
+            if not user["cliente_id"]:                                                          # type: ignore
                 flash("Erro: este utilizador cliente não está associado a um cliente.")
                 return redirect(url_for("login"))
 
             # Guarda o cliente_id na sessão para filtrar dados do cliente
-            session["cliente_id"] = user["cliente_id"]
+            session["cliente_id"] = user["cliente_id"]                                     # type: ignore
 
         flash("Login efetuado com sucesso!")
         return redirect(url_for("dashboard"))
@@ -430,7 +430,7 @@ def editar_cliente(id):
 
     except Exception:
         app.logger.exception("ERRO AO EDITAR CLIENTE")
-        conexao.rollback()
+        conexao.rollback()              
         flash("Erro ao atualizar cliente.")
         return redirect(url_for("clientes_listar"))
 
@@ -601,7 +601,7 @@ def editar_user(id):
             if admin():
                 nova_password_raw = request.form.get("password", "").strip()
                 if nova_password_raw:
-                    nova_password = generate_password_hash(nova_password_raw)
+                    nova_password = generate_password_hash(nova_password_raw)                              # type: ignore
 
             if not username:
                 flash("Username é obrigatório.")
@@ -965,6 +965,59 @@ def minhas_consultas():
         # Fecha a ligação ao banco
         cursor.close()
         conexao.close()
+
+@app.route("/trocar_password/<int:id>", methods=["GET", "POST"])
+def trocar_password(id):
+    # Verifica se está logado
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    # Apenas o próprio utilizador ou admin podem alterar
+    if session["user_id"] != id and not admin():
+        flash("Não tem permissão para alterar esta password.")
+        return redirect(url_for("dashboard"))
+
+    conexao = ligar_db()
+    cursor = conexao.cursor(dictionary=True)
+
+    # Buscar dados do utilizador
+    cursor.execute("SELECT id, username FROM users WHERE id=%s", (id,))
+    user = cursor.fetchone()
+
+    if not user:
+        flash("Utilizador não encontrado.")
+        return redirect(url_for("dashboard"))
+
+    if request.method == "POST":
+        nova = request.form.get("nova_password", "").strip()
+        confirmar = request.form.get("confirmar_password", "").strip()
+
+        # Validação
+        if not nova or not confirmar:
+            flash("Preencha todos os campos.")
+            return render_template("users/trocar_password.html", user=user)
+
+        if nova != confirmar:
+            flash("As passwords não coincidem.")
+            return render_template("users/trocar_password.html", user=user)
+
+        # Atualizar password
+        cursor.execute("""
+            UPDATE users SET password=%s WHERE id=%s
+        """, (nova, id))
+
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+
+        flash("Password alterada com sucesso!")
+        return redirect(url_for("dashboard"))
+
+    cursor.close()
+    conexao.close()
+
+    return render_template("users/trocar_password.html", user=user)
+
 
 # ============================
 # LOGOUT

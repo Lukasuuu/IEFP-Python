@@ -14,7 +14,9 @@
 
     <!-- Se os dados do cliente foram carregados corretamente -->
     {% if cliente %}
-
+          <a href="{{ url_for('trocar_password', id=session['user_id']) }}" class="btn btn-outline-primary">
+    Alterar Password
+</a>
         <!-- Secção com os dados pessoais -->
         <div class="dados-cliente">
 

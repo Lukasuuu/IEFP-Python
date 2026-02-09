@@ -1,3 +1,6 @@
+/* =========================================================
+   VARIÁVEIS GLOBAIS
+   ========================================================= */
 :root {
   --clinic-primary: #0d6efd;
   --clinic-accent: #20c997;
@@ -5,22 +8,45 @@
   --bg: #f6f9fb;
 }
 
-/* Corpo e tipografia */
+/* =========================================================
+   BASE DO SITE
+   ========================================================= */
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
   background: var(--bg);
   color: #222;
   margin: 0;
+
+  /* Espaço para o footer fixo */
+  padding-bottom: 160px;
 }
 
-/* Header com gradiente leve */
+/* Marca d’água global */
+body::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
+  background-image: url("/static/img/logo_clinica.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.06;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 header {
   background: linear-gradient(90deg, rgba(13,110,253,0.06), rgba(32,201,151,0.03));
   padding: 18px 0;
   border-bottom: 1px solid rgba(0,0,0,0.04);
 }
 
-/* Marca textual */
 .brand {
   font-weight: 700;
   color: var(--clinic-primary);
@@ -28,7 +54,9 @@ header {
   text-decoration: none;
 }
 
-/* Bloco hero */
+/* =========================================================
+   HERO BLOCK
+   ========================================================= */
 .hero {
   background: #ffffff;
   border-radius: 8px;
@@ -36,7 +64,12 @@ header {
   box-shadow: 0 1px 6px rgba(16,24,40,0.04);
 }
 
-/* Badge clínica */
+@media (max-width: 576px) {
+  .hero {
+    padding: 12px;
+  }
+}
+
 .clinic-badge {
   background: var(--clinic-accent);
   color: white;
@@ -46,15 +79,17 @@ header {
   display: inline-block;
 }
 
-/* Footer escuro */
+/* =========================================================
+   FOOTER FIXO
+   ========================================================= */
 footer {
   background: #0b1a1a;
   color: #e9f7f2;
   padding: 28px 0;
   margin-top: 28px;
+  position: fixed;
   bottom: 0;
   left: 0;
-  position: fixed;
   width: 100%;
   z-index: 1000;
 }
@@ -67,23 +102,9 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* Utilidades */
-.small {
-  font-size: 0.9rem;
-  color: var(--muted);
-}
-.text-muted {
-  color: var(--muted) !important;
-}
-
-/* Responsividade hero */
-@media (max-width: 576px) {
-  .hero {
-    padding: 12px;
-  }
-}
-
-/* Tabelas */
+/* =========================================================
+   TABELAS
+   ========================================================= */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -93,6 +114,7 @@ table {
   overflow: hidden;
   margin-bottom: 1rem;
 }
+
 table thead th {
   background: linear-gradient(90deg, rgba(13,110,253,0.06), rgba(32,201,151,0.03));
   color: #0b3b5a;
@@ -102,6 +124,7 @@ table thead th {
   border-bottom: 1px solid rgba(0,0,0,0.06);
   font-size: 0.95rem;
 }
+
 table tbody td {
   padding: 10px;
   border-bottom: 1px solid rgba(0,0,0,0.04);
@@ -109,14 +132,11 @@ table tbody td {
   font-size: 0.95rem;
   color: #222;
 }
+
 table tbody tr:nth-child(even) {
   background: #fbfdfe;
 }
-table[border] {
-  border: none;
-}
 
-/* Links de ação */
 .action-links a {
   margin-right: 8px;
   color: var(--clinic-primary);
@@ -127,23 +147,6 @@ table[border] {
   text-decoration: underline;
 }
 
-/* Botões pequenos */
-.btn-sm-custom {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 0.85rem;
-  border-radius: 6px;
-  border: 1px solid rgba(0,0,0,0.06);
-  background: #fff;
-  color: var(--clinic-primary);
-  text-decoration: none;
-}
-.btn-sm-custom.danger {
-  color: #c82333;
-  border-color: rgba(200,40,50,0.08);
-}
-
-/* Scroll horizontal em ecrãs pequenos */
 .table-responsive-custom {
   width: 100%;
   overflow-x: auto;
@@ -155,22 +158,46 @@ table[border] {
   font-size: 0.9rem;
 }
 
-/* ================================
-   LOGIN — Fundo com padrão + logo
-   ================================ */
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+.btn-sm-custom {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: #fff;
+  color: var(--clinic-primary);
+  text-decoration: none;
+}
+
+.btn-sm-custom.danger {
+  color: #c82333;
+  border-color: rgba(200,40,50,0.08);
+}
+
+/* =========================================================
+   LOGIN — FUNDO E CAIXA
+   ========================================================= */
 .login-background {
   min-height: 100vh;
+  width: 100%;
   background-color: #f5f5f5;
-  background-image: url("static/img/logo_clinica.png");
+  background-image: url("/static/img/logo_clinica.png");
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: 300px;
+  background-size: 85%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Caixa do login */
+/* Remove marca d’água do login */
+.login-background::before {
+  display: none !important;
+}
+
 .login-box {
   background: white;
   padding: 35px;
@@ -179,64 +206,9 @@ table[border] {
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
-/* Logo SVG centralizado */
 .logo-container svg {
   width: 150px;
   height: auto;
   display: block;
   margin: 0 auto 20px auto;
-}
-
-/* ================================
-   LOGIN — Fundo com imagem
-   ================================ */
-.login-background {
-    min-height: 100vh;
-    width: 100%;
-    background-color: #f5f5f5;
-
-    /* A tua imagem grande */
-    background-image: url("/static/img/logo_clinica.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 80%; /* aumenta ou diminui conforme quiseres */
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Caixa do login */
-.login-box {
-    background: white;
-    padding: 35px;
-    border-radius: 12px;
-    width: 350px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
-
-/* ================================
-   MARCA D'ÁGUA GLOBAL (base.html)
-   ================================ */
-body::before {
-    content: "";
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 600px;
-    height: 600px;
-    transform: translate(-50%, -50%);
-
-    background-image: url("/static/img/logo_clinica.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-
-    opacity: 0.08; /* super transparente */
-    z-index: -1;
-    pointer-events: none;
-}
-
-/* Remove marca d’água do login */
-.login-background::before {
-    display: none !important;
 }
