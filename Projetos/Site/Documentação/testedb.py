@@ -12,7 +12,7 @@ def ligar_db():
                 password="123.Abc",
                 database="efa0125_08_vet_clinic"
 )
-
+       
 def testar_db():
     try:
         conexao = ligar_db()
@@ -25,9 +25,14 @@ def testar_db():
         print("Conexão bem-sucedida! Resultado:", resultado)
         
     except mysql.connector.Error as erro:
-        print("Erro ao conectar ao MySQL:", erro)
-  
-     
+        print("Erro ao conectar ao MySQL:", erro)   
+    
+    finally:
+        if 'cursor' in locals() and cursor:    # type: ignore
+            cursor.close()
+        if 'conexao' in locals() and conexao:  # type: ignore
+            conexao.close()
+        
 
 if __name__ == "__main__":
     testar_db()
