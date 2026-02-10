@@ -17,8 +17,15 @@ body {
   color: #222;
   margin: 0;
 
-  /* Espaço para o footer fixo */
-  padding-bottom: 160px;
+  /* Layout flexível para footer adaptável */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Conteúdo principal cresce para empurrar o footer */
+main {
+  flex: 1;
 }
 
 /* Marca d’água global */
@@ -80,16 +87,13 @@ header {
 }
 
 /* =========================================================
-   FOOTER FIXO
+   FOOTER 
    ========================================================= */
 footer {
   background: #0b1a1a;
   color: #e9f7f2;
   padding: 28px 0;
   margin-top: 28px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
   z-index: 1000;
 }
