@@ -1,7 +1,7 @@
 #Importa a classe Aluno do módulo Aluno
 import Aluno
 
-class AlunoBolseiro(Aluno):
+class AlunoBolseiro(Aluno.Aluno):
     def __init__(self, nome, nota, bolsa):
         #Chama o contrutor da classe pai (Aluno) para inicializar os atributos nome e nota
         super().__init__(nome, nota)
@@ -21,26 +21,6 @@ class AlunoBolseiro(Aluno):
         self.bolsa += valor
         return self.bolsa
     
-#METODO Por mecanismo de herança, a classe AlunoBolseiro
-aluno_normal = Aluno.Aluno("Maria", 14)
-aluno_bolseiro = AlunoBolseiro("Joao",12, 150)
+
     
-def main():
 
-    print(aluno_normal.resumo())
-    print(aluno_bolseiro.resumo()) 
-
-    print("---------------------------------------------------------------------")  
-
-    print(aluno_normal.situacao())
-    print(aluno_bolseiro.situacao())
-    print("---------------------------------------------------------------------")  
-
-    print(aluno_bolseiro.bolsa)
-    print(aluno_bolseiro.aumentar_bolsa(50))
-
-    print("---------------------------------------------------------------------")
-
-    print(aluno_bolseiro.resumo())       
-
-print(main())
