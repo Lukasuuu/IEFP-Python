@@ -12,32 +12,31 @@ def main():
     print(aluno1.nome, aluno1.nota, aluno1.situacao())
     print(aluno2.nome, aluno2.nota, aluno2.situacao())
 
-    print("\n")
+    print("---------------------------------------------------------------------")
 
     print(aluno1.dados())
     print(aluno2.dados())
-
 
     print(f"Aluno 2 nota original: {aluno2.nota}")
     aluno2.alterar_nota(7)
     print(f"Aluno 2 nota alterada via método: {aluno2.nota}")
 
-    print("\n")
+    print("---------------------------------------------------------------------")
 
     print(f"{aluno1.nome}: aprovado(a)? \n{aluno1.esta_aprovado()}")
     print(f"{aluno2.nome}:  aprovado(a)? \n{aluno2.esta_aprovado()}")
 
-    print("\n")
+    print("---------------------------------------------------------------------")
 
     print(aluno1.resumo())
     print(aluno2.resumo())
 
-    print("\n")
+    print("---------------------------------------------------------------------")
 
     print(aluno2.pontos_extra(2))
     print(f"{aluno2.nome} tem nota extra:{aluno2.pontos_extra(2)} e obteve nota final: {aluno2.nota}")
 
-    print("\n")
+    print("---------------------------------------------------------------------")
 
 
     print(aluno_normal.resumo())
